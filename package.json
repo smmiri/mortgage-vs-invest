@@ -23,7 +23,7 @@
     "build": "vite build && node scripts/configure-site-url.mjs",
     "preview": "vite preview",
     "api": "node scripts/serve-api.mjs",
-    "test": "node --test src/lib/model.test.js src/lib/closing-costs.test.js src/lib/exit-taxes.test.js"
+    "test": "node --test src/lib/model.test.js src/lib/closing-costs.test.js src/lib/exit-taxes.test.js src/lib/persist-inputs.test.js"
   },
   "dependencies": {
     "react": "^19.1.0",

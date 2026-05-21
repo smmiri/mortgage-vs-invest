@@ -52,7 +52,7 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
         <div>
           <h2 className="text-lg font-semibold text-slate-900">Assumptions</h2>
           <p className="mt-0.5 text-sm text-slate-500">
-            Drag sliders or type values. Hover{" "}
+            Drag sliders or type values. Your assumptions are saved in this browser automatically. Hover{" "}
             <span className="inline-flex h-3.5 w-3.5 translate-y-px items-center justify-center rounded-full border border-slate-300 text-[8px] text-slate-500">
               i
             </span>{" "}

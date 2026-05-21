@@ -9,7 +9,8 @@ export default function Footer({ repoUrl }) {
             builds, optional sale costs, and simplified exit capital gains (PRE on home; taxable portfolio).
             Excludes annual tax drag, TFSA/FHSA room, RRSP, refinancing/renewal risk, large one-off repairs,
             and moving or renter&apos;s insurance. Assumes constant growth rates. Use as a sensitivity tool, not a
-            recommendation.
+            recommendation. Calculator assumptions are stored in a first-party browser cookie on this
+            device so they persist when you return; use Reset to defaults to clear them.
           </p>
           <div className="flex items-center gap-3">
             <span>MIT licensed</span>
