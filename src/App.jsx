@@ -1,0 +1,29 @@
+import Calculator from "./components/Calculator.jsx";
+import Footer from "./components/Footer.jsx";
+import Header from "./components/Header.jsx";
+import Hero from "./components/Hero.jsx";
+import Methodology from "./components/Methodology.jsx";
+
+const REPO_URL = import.meta.env.VITE_REPO_URL ?? "https://github.com/smmiri/mortgage-vs-invest";
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-slate-900 focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+      >
+        Skip to content
+      </a>
+      <Header repoUrl={REPO_URL} />
+      <main id="main">
+        <Hero />
+        <Calculator />
+        <section id="methodology" className="mx-auto max-w-6xl px-4 pb-12 sm:px-6" aria-label="Methodology">
+          <Methodology />
+        </section>
+      </main>
+      <Footer repoUrl={REPO_URL} />
+    </div>
+  );
+}

@@ -1,0 +1,39 @@
+{
+  "name": "buy-vs-rent-and-invest",
+  "version": "0.1.0",
+  "description": "Open-source, transparent buy-vs-rent calculator. Canadian mortgage math (CMHC, semi-annual compounding), optional sale costs, editable assumptions.",
+  "keywords": [
+    "mortgage",
+    "buy-vs-rent",
+    "calculator",
+    "canada",
+    "cmhc",
+    "personal-finance"
+  ],
+  "license": "MIT",
+  "author": "Mohammad Miri",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smmiri/mortgage-vs-invest.git"
+  },
+  "homepage": "https://smmiri.github.io/mortgage-vs-invest/",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/configure-site-url.mjs",
+    "preview": "vite preview",
+    "api": "node scripts/serve-api.mjs",
+    "test": "node --test src/lib/model.test.js src/lib/closing-costs.test.js"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "recharts": "^2.15.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.8",
+    "@vitejs/plugin-react": "^4.5.2",
+    "tailwindcss": "^4.1.8",
+    "vite": "^6.3.5"
+  }
+}
