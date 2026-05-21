@@ -1,200 +1,142 @@
-# Buy vs Rent &amp; Invest
+# Buy vs Rent & Invest
 
-A small open-source web calculator that compares two long-running decisions:
+Open-source calculator that compares two long-running paths over the same time horizon:
 
-1. **Buy a home**, pay down a mortgage, and either sell or keep the property at the end of the time horizon.
-2. **Rent the same home** and invest the difference (and the down payment) in a market portfolio.
+1. **Buy** a home, pay down a Canadian-style mortgage, and either sell at the end (optional transaction costs) or keep the property.
+2. **Rent** an equivalent home and invest the same upfront cash plus any monthly surplus at a market return.
 
-The model is month-by-month, written as a pure function, and aimed at Canadian buyers (semi-annual mortgage compounding, CMHC default insurance tiers, 25/30 year amortization rules). It still works for other jurisdictions if you set the inputs accordingly.
+**Live app:** [smmiri.github.io/mortgage-vs-invest](https://smmiri.github.io/mortgage-vs-invest/)
 
-## Highlights
+The simulation is month-by-month, implemented as pure functions in `src/lib/`. The web UI is a thin layer on top. Core logic is in **`src/lib/model.js`** (wealth paths) and **`src/lib/closing-costs.js`** (Canadian cash-to-close).
 
-- **Cash to close** by province: land transfer tax (with first-time-buyer rebates), GST/HST on new construction, PST on CMHC where applicable, plus legal/title/inspection.
-- **CMHC default insurance** when down payment is below 20% (premium rolled into the mortgage; surfaced in the UI).
-- Canadian **semi-annual** mortgage compounding, **25 / 30 year** amortization, optional **sale costs** at exit.
-- **Symmetric monthly cash flow**: both paths spend `max(owning_cost, rent)`; the cheaper side invests the difference.
-- Expense inflation on ownership costs; editable assumptions; crossover year on the chart.
+---
 
-## Quickstart
+## What is being compared?
 
-```bash
-npm install
-npm run dev
+Both paths are given the **same total cash at closing** (down payment + closing costs). The buyer puts the down payment into equity and pays closing costs to third parties. The renter invests that full amount in a portfolio at the chosen market return.
+
+Each month, both paths are assumed to spend the same on housing:
+
+```text
+monthly_housing_budget = max(owning_cost, rent)
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173`).
+The cheaper side invests the difference at the market return (never negative). When owning is more expensive, the renter’s portfolio grows by `owning_cost − rent`. When renting is more expensive (e.g. after the mortgage is largely paid down), the buyer compounds `rent − owning_cost` in a side portfolio.
 
-```bash
-npm run build     # production bundle in dist/
-npm run preview   # serve dist/ locally
-npm run api       # run the JSON API on http://localhost:8787
-npm test          # run the model tests with node --test
+**Winner** at year *t* is whichever path has higher **net wealth** (buy line minus rent line). The chart marks the **crossover year** when those lines meet.
+
+---
+
+## Modeling assumptions
+
+| Topic | Assumption |
+|--------|------------|
+| Geography | Canadian mortgage conventions by default (semi-annual compounding, CMHC tiers, provincial land transfer tax). Other jurisdictions can be approximated by editing inputs. |
+| Growth rates | Property appreciation, rent increases, expense inflation, and market return are **constant** annual rates, compounded monthly where relevant. |
+| Housing budget | **Symmetric** monthly cap: `max(owning_cost, rent)`; surplus invested by the cheaper side. |
+| Ownership costs | Fixed monthly bundle (tax, insurance, condo/strata, maintenance), grown by expense inflation. Mortgage P&I from amortization schedule. |
+| Down payment | User sets **% of price**; financed amount = price − down payment (+ CMHC premium if insured). |
+| Amortization | **25 or 30 years**; 30-year insured mortgages add **+0.20%** to the CMHC premium rate. |
+| Time horizon | User-chosen (1–40 years); independent of amortization length. |
+| Sale at exit | Optional % haircut on property value (realtor, legal, discharge). Off = paper equity only. |
+
+---
+
+## Mortgage math (Canada)
+
+Quoted nominal annual rate *r* compounds **semi-annually**. Effective monthly rate:
+
+```text
+r_m = (1 + r / 2)^(1/6) − 1
 ```
 
-> Why doesn't `python -m http.server` work? The source is JSX. Browsers can't parse JSX directly — Vite (or any bundler) has to transform it first. Either use `npm run dev` (which transforms on the fly) or `npm run build && npm run preview` (which serves the pre-built static bundle). Once `dist/` exists you can also serve it with anything, including Python's static server.
+Payment on principal *P* (including CMHC rolled in) over *n* months:
 
-## Backend / JSON API
-
-The simulation and closing-cost math live in `src/lib/` as pure JS — runtime-agnostic, no React, no DOM, no globals. To expose them over HTTP:
-
-```bash
-npm run api                        # listens on http://localhost:8787
-PORT=4000 npm run api               # custom port
-CORS_ORIGIN=https://example.com npm run api  # lock down CORS
+```text
+P · r_m · (1 + r_m)^n / ((1 + r_m)^n − 1)
 ```
 
-Endpoints:
+### CMHC default insurance (down &lt; 20%)
 
-| Method | Path | Body / query | Returns |
-| ------ | ---- | ------------ | ------- |
-| GET    | `/api/health` | — | service info + default inputs + province list |
-| POST   | `/api/simulate` | partial inputs (merged with defaults) | `{ inputs, result }` |
-| POST   | `/api/closing-costs` | `{ price, province, firstTimeBuyer, newConstruction, includeTorontoLtt, otherClosingCosts, cmhcPremium }` | breakdown + total |
-| POST   | `/api/ltt` | same shape | LTT only |
-| POST   | `/api/gst-hst` | same shape | GST/HST only |
-| POST   | `/api/sweep` | `{ base, overrides: [{ label, patch }] }` | array of `{ label, delta, deltaVsBaseline, breakeven }` |
-| GET    | `/api/closing-costs/preview?price=&province=ON&ftb=true&new=false&toronto=false&other=2500&cmhc=24990` | — | same as POST `/api/closing-costs` |
+| Down payment (% of price) | Premium rate on financed amount |
+|---------------------------|----------------------------------|
+| 15 – 19.99% | 2.8% |
+| 10 – 14.99% | 3.1% |
+| 5 – 9.99% | 4.0% |
 
-CORS is open by default so a frontend served from another host (Vite, Python `http.server`, Nginx, S3, anywhere) can call it. Set `CORS_ORIGIN` to restrict in production.
+Premium is **added to the mortgage principal**, not paid as cash at closing (PST on the premium may be cash in ON / QC / SK / MB). Amortization **&gt; 25 years** on an insured loan adds **+0.20%** to the premium rate.
 
-Example:
+Minimum down payment follows the usual Canadian sliding scale (5% on the first $500k, 10% on $500k–$1.5M, 20% above $1.5M). Properties above **$1.5M** are treated as non-insurable (20% down required; no CMHC in the model).
 
-```bash
-curl -s http://localhost:8787/api/closing-costs \
-  -H 'content-type: application/json' \
-  -d '{"price":1050000,"province":"ON","firstTimeBuyer":true,"newConstruction":true,"includeTorontoLtt":false,"cmhcPremium":24990}' | jq .total
+---
+
+## Cash to close (province-aware)
+
+Closing costs are computed from **province**, **first-time buyer** status, and whether the home is **new construction**.
+
+**Land transfer tax (LTT / PTT)** — bracket schedules for BC, ON (+ optional Toronto MLTT), QC (+ optional Montréal surtax), MB, and flat or negligible rates elsewhere. Rebates/exemptions modeled where common:
+
+- BC first-time buyer exemption (full ≤ $835k, partial to $860k); newly built exemption (full ≤ $1.1M, partial to $1.15M).
+- Ontario $4,000 rebate; Toronto MLTT $4,475 rebate.
+- PEI full exemption for FTB on resale ≤ $200k.
+
+**GST / HST on new construction** — resale is exempt. New builds: federal GST 5% with standard new-housing rebate (CRA RC4028) and **2025 first-time buyer GST rebate** (full refund on homes ≤ $1M, phased to $1.5M). Provincial HST portion rebates where applicable (e.g. Ontario cap $24k on the provincial share).
+
+**Other cash at closing** — user-editable legal / title / inspection (default ~$2,500).
+
+The renter is modeled as having invested **down payment + total closing costs** at year 0. The buyer’s chart line is rebased to **down payment only** at year 0, so the visible gap between the two lines at *t = 0* equals closing costs.
+
+---
+
+## Wealth paths
+
+**Renter** at month *m*:
+
+```text
+portfolio_m = portfolio_{m−1} · (1 + r_market/12) + top_up_m
+top_up_m = max(0, max(own_cost_m, rent_m) − rent_m)
 ```
 
-The server is zero-dependency Node 18+ using the built-in `node:http` module. Deploy it anywhere that runs Node (Render, Fly, Railway, Vercel functions, AWS Lambda via a small wrapper, a Docker container, or just `pm2` on a VPS).
+**Buyer** liquid value if sold:
 
-## Publish to GitHub ([smmiri](https://github.com/smmiri))
-
-Publish **only** the `mortgage-vs-invest` folder as its own repo (not the whole `personal-random` workspace).
-
-### 1. Create the repo and push (first time)
-
-With [GitHub CLI](https://cli.github.com/) installed (`gh auth login`):
-
-```bash
-cd personal/mortgage-vs-invest
-
-git init
-git add .
-git commit -m "Initial release: Canadian buy vs rent calculator"
-
-# Creates https://github.com/smmiri/mortgage-vs-invest and pushes main
-gh repo create mortgage-vs-invest --public --source=. --remote=origin --push
+```text
+liquid_m = property_m · (1 − sale_cost%) − mortgage_balance_m
 ```
 
-Without `gh`: create an empty public repo named **mortgage-vs-invest** on GitHub, then:
+**Buyer** wealth on the chart (rebased at year 0):
 
-```bash
-cd personal/mortgage-vs-invest
-git init
-git add .
-git commit -m "Initial release: Canadian buy vs rent calculator"
-git branch -M main
-git remote add origin https://github.com/smmiri/mortgage-vs-invest.git
-git push -u origin main
+```text
+buy_wealth_m = down_payment + (liquid_m − liquid_0) + buyer_side_portfolio_m
 ```
 
-### 2. GitHub Pages (free public URL)
+`buyer_side_portfolio` grows when `rent_m > own_cost_m` at the same monthly housing budget.
 
-**Required once** (otherwise the deploy job fails with `404` / `Creating Pages deployment failed`):
+---
 
-1. Open **https://github.com/smmiri/mortgage-vs-invest/settings/pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions** (not “Deploy from a branch”).
-3. Save. No branch or folder selection is needed when using Actions.
+## What is not modeled
 
-Then either push to `main` or **Actions** → **Deploy to GitHub Pages** → **Run workflow**.
+- Income taxes (marginal rates, TFSA / RRSP / FHSA, principal-residence capital gains exemption).
+- Mortgage **refinancing** or **renewal** at a different rate mid-amortization.
+- Major one-off capital repairs beyond the monthly maintenance input.
+- Renter’s insurance, deposits, or moving costs.
+- Statutory rent-control caps (set your own rent-increase %).
 
-Workflow: `.github/workflows/deploy-pages.yml`. Live site:
+Tax and closing-cost rules change with budgets and indexing; figures are **estimates** for sensitivity analysis, not filings.
 
-**https://smmiri.github.io/mortgage-vs-invest/**
+---
 
-If deploy still fails: confirm the repo is **public** (or that your plan allows Pages on private repos), and that **Settings → Actions → General → Workflow permissions** allows read/write for workflows.
+## Using this repository
 
-### 3. Local build matching Pages
+- **Use the app** — open the [live calculator](https://smmiri.github.io/mortgage-vs-invest/) and adjust inputs; methodology and a worked example are in the app.
+- **Fork or clone** — MIT license. The model is dependency-free in `src/lib/`; import `simulate()` from `src/lib/model.js` in your own tooling or tests (`npm test` runs `node --test` on the lib tests).
+- **Issues and PRs** — welcome; keep changes to the model tested and document new inputs in `FIELD_META` and the in-app methodology section.
 
-```bash
-VITE_BASE=/mortgage-vs-invest/ \
-VITE_SITE_URL=https://smmiri.github.io/mortgage-vs-invest \
-VITE_REPO_URL=https://github.com/smmiri/mortgage-vs-invest \
-npm run build
-npm run preview
-```
-
-## Other static hosts
-
-Drop `dist/` on Vercel, Netlify, or Cloudflare Pages (build: `npm run build`, output: `dist`). For a custom domain use `VITE_BASE=/` and your real `VITE_SITE_URL`.
-
-`VITE_SITE_URL` rewrites `index.html`, `robots.txt`, and `sitemap.xml` at build time (see `scripts/configure-site-url.mjs`).
-
-## Project layout
-
-```
-public/
-  robots.txt               Crawler directives + sitemap pointer
-  sitemap.xml              Single canonical URL (rewritten at build)
-  site.webmanifest         PWA manifest
-  favicon.svg              App icon
-  og-image.svg             1200x630 social card
-
-scripts/
-  configure-site-url.mjs   Post-build URL substitution (canonical URL etc.)
-  serve-api.mjs            Zero-dependency Node HTTP server for the JSON API
-
-src/
-  App.jsx                  Compose Header / Hero / Calculator / Methodology / Footer
-  main.jsx                 React entry
-  index.css                Tailwind v4 + Inter
-  lib/
-    model.js               Pure simulation. Returns trajectory + summary stats.
-    closing-costs.js       LTT / GST-HST / PST-on-CMHC by province, FTB programs.
-    defaults.js            DEFAULT_INPUTS + FIELD_META (labels, help text, steps)
-    format.js              Currency / percent formatters
-    model.test.js          node:test smoke tests for the simulation
-    closing-costs.test.js  node:test smoke tests for the tax math
-  components/
-    Header.jsx Hero.jsx Calculator.jsx
-    InputPanel.jsx InputField.jsx SliderField.jsx InfoTip.jsx
-    ClosingCostsSection.jsx
-    StatCard.jsx Summary.jsx WealthChart.jsx YearTable.jsx Warnings.jsx
-    Methodology.jsx Footer.jsx
-```
-
-The model is the most important file. It is dependency-free and small enough to read in one sitting. Everything else is presentation.
-
-## Methodology in one screen
-
-- Canadian effective monthly rate: `r_m = (1 + r/2)^(1/6) − 1`.
-- Mortgage payment: `P · r_m · (1 + r_m)^n / ((1 + r_m)^n − 1)`.
-- CMHC: 2.8% (15–19.99% down), 3.1% (10–14.99%), 4.0% (5–9.99%). +0.20% if amortization > 25y.
-- Both lines start at the down payment at year 0 (rebased baseline). The methodology section in the app explains the rebasing and what is hidden by it.
-- Each month: pay interest + principal, inflate ownership expenses, set `cap = max(owning_cost, rent)`, the cheaper side invests `cap − own_cost` (buyer's side portfolio) or `cap − rent` (renter portfolio) at the market return.
-- At year `t`: buyer wealth = `down_payment + (liquid_value_t − liquid_value_0) + buyer_side_portfolio_t`; renter wealth = `renter_portfolio_t`.
-- `liquid_value_t = property_value_t · (1 − sale_cost%) − mortgage_balance_t`, or just `property_value_t − mortgage_balance_t` when sale costs are disabled.
-
-## Contributing
-
-Issues and PRs are welcome. Keep the model pure and tested:
-
-```bash
-npm test
-```
-
-When adding a new assumption, prefer a new input on the panel over hard-coded constants. Add a help string in `FIELD_META` and a short methodology paragraph.
+---
 
 ## Disclaimer
 
-**Not financial advice.** This calculator is a simplified, educational model — not a substitute for a mortgage broker, accountant, or lawyer.
-
-**Included (approximate):** CMHC tiers and 30-year surcharge; monthly P&I with semi-annual compounding; province-aware land transfer tax and first-time-buyer rebates; GST/HST new-housing rebates on new builds; PST on CMHC in ON/QC/SK/MB; legal/title/inspection; optional end-of-horizon sale costs; rent and ownership expense inflation.
-
-**Not included:** Income taxes (marginal rates, TFSA/RRSP/FHSA, principal-residence capital gains rules); mortgage refinancing or renewal at new rates; major one-off capital repairs beyond the monthly maintenance input; renter's insurance, deposits, or moving costs; rent-control ceilings (set your own rent-increase assumption). Growth rates are held constant over the horizon.
-
-Treat every output as **directional**. Change one input at a time and watch the crossover shift — use it as a **sensitivity tool**, not a recommendation to buy or rent.
+**Not financial advice.** Simplified educational model — not a substitute for a mortgage broker, accountant, or lawyer. Treat outputs as **directional**; use as a **sensitivity tool**, not a recommendation to buy or rent.
 
 ## License
 
-MIT. See [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE).
