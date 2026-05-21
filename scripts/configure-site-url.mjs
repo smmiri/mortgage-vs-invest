@@ -8,7 +8,7 @@
 import { readFile, writeFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
 
-const PLACEHOLDER = "https://buy-vs-rent.example.com";
+const PLACEHOLDER = "https://rentorbuy.smmiri.com";
 const TARGETS = new Set([".html", ".xml", ".txt", ".webmanifest", ".json", ".svg"]);
 const root = new URL("../dist/", import.meta.url);
 

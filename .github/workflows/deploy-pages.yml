@@ -1,5 +1,6 @@
 # Build the static site and publish to GitHub Pages.
-# Live URL: https://smmiri.github.io/mortgage-vs-invest/
+# Canonical URL: https://rentorbuy.smmiri.com/
+# Legacy: https://smmiri.github.io/mortgage-vs-invest/
 #
 # FIRST-TIME SETUP (fixes deploy 404):
 #   Repo → Settings → Pages → Build and deployment → Source: "GitHub Actions"
@@ -44,8 +45,8 @@ jobs:
 
       - name: Build for GitHub Pages
         env:
-          VITE_BASE: /mortgage-vs-invest/
-          VITE_SITE_URL: https://smmiri.github.io/mortgage-vs-invest
+          VITE_BASE: /
+          VITE_SITE_URL: https://rentorbuy.smmiri.com
           VITE_REPO_URL: https://github.com/smmiri/mortgage-vs-invest
         run: npm run build
 

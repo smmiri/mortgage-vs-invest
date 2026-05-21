@@ -1,8 +1,8 @@
 {
-  "name": "Buy vs Rent & Invest",
-  "short_name": "Buy vs Rent",
-  "description": "Open-source month-by-month buy vs rent calculator. Canadian mortgage math, CMHC, optional sale costs.",
-  "start_url": "/",
+  "name": "Rent or Buy Calculator",
+  "short_name": "Rent or Buy",
+  "description": "Canadian buy vs rent calculator. CMHC, closing costs, rent vs invest comparison.",
+  "start_url": "https://rentorbuy.smmiri.com/",
   "scope": "/",
   "display": "minimal-ui",
   "background_color": "#f8fafc",

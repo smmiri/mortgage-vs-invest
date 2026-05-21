@@ -1,56 +1,54 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
     <meta name="color-scheme" content="light" />
 
-    <title>Buy vs Rent &amp; Invest Calculator · Canadian mortgage model</title>
+    <title>Rent or Buy? Canadian Buy vs Rent Calculator · CMHC &amp; Closing Costs</title>
     <meta
       name="description"
-      content="Free, open-source buy vs rent calculator. Month-by-month Canadian mortgage model with CMHC, semi-annual compounding, optional sale costs, and editable assumptions. See exactly when buying overtakes renting."
+      content="Free Canadian buy vs rent calculator. Compare buying a home vs renting and investing the same cash. CMHC, province closing costs, semi-annual mortgage math, exit taxes, and year-by-year wealth chart."
     />
-    <meta
-      name="keywords"
-      content="buy vs rent calculator, rent vs buy, CMHC, Canadian mortgage, mortgage calculator, real estate calculator, financial independence, personal finance, FIRE, open source"
-    />
-    <meta name="author" content="The Buy vs Rent &amp; Invest contributors" />
+    <meta name="author" content="Mohammad Miri" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="googlebot" content="index, follow" />
 
-    <!-- Canonical URL. Replace `https://buy-vs-rent.example.com` with the real host before deploying. -->
-    <link rel="canonical" href="https://buy-vs-rent.example.com/" />
-    <meta name="application-name" content="Buy vs Rent &amp; Invest" />
+    <link rel="canonical" href="https://rentorbuy.smmiri.com/" />
+    <meta name="application-name" content="Rent or Buy Calculator" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Open Graph -->
-    <meta property="og:site_name" content="Buy vs Rent &amp; Invest" />
-    <meta property="og:title" content="Buy vs Rent &amp; Invest · Open-source Canadian mortgage calculator" />
+    <meta property="og:site_name" content="Rent or Buy · smmiri.com" />
+    <meta
+      property="og:title"
+      content="Rent or Buy? Canadian buy vs rent &amp; invest calculator"
+    />
     <meta
       property="og:description"
-      content="Transparent month-by-month model. CMHC, semi-annual compounding, optional sale costs, symmetric monthly cash flow. See when buying overtakes renting."
+      content="Should you buy or rent and invest? Month-by-month model with CMHC, cash-to-close by province, optional sale at exit, and after-tax portfolio comparison."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://buy-vs-rent.example.com/" />
+    <meta property="og:url" content="https://rentorbuy.smmiri.com/" />
     <meta property="og:locale" content="en_CA" />
-    <meta property="og:image" content="https://buy-vs-rent.example.com/og-image.svg" />
+    <meta property="og:image" content="https://rentorbuy.smmiri.com/og-image.svg" />
     <meta property="og:image:type" content="image/svg+xml" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Two lines on a chart compare buy and rent wealth over ten years." />
+    <meta
+      property="og:image:alt"
+      content="Chart comparing buy vs rent and invest wealth over time in Canada."
+    />
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Buy vs Rent &amp; Invest" />
+    <meta name="twitter:title" content="Rent or Buy? Canadian calculator" />
     <meta
       name="twitter:description"
-      content="Open-source calculator. Canadian mortgage math, optional sale costs, editable assumptions, year-by-year breakdown."
+      content="Open-source buy vs rent tool: CMHC, closing costs, rent inflation, market return, principal residence tax at exit."
     />
-    <meta name="twitter:image" content="https://buy-vs-rent.example.com/og-image.svg" />
-    <meta name="twitter:image:alt" content="Buy vs Rent &amp; Invest calculator preview." />
+    <meta name="twitter:image" content="https://rentorbuy.smmiri.com/og-image.svg" />
+    <meta name="twitter:image:alt" content="Buy vs rent wealth trajectory chart." />
 
-    <!-- Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -70,16 +68,15 @@
     />
     <link rel="apple-touch-icon" href="/favicon.svg" />
 
-    <!-- Structured data: WebApplication schema for the calculator -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "@id": "https://buy-vs-rent.example.com/#app",
-        "name": "Buy vs Rent & Invest",
-        "alternateName": "Canadian Buy vs Rent Calculator",
-        "url": "https://buy-vs-rent.example.com/",
-        "description": "Open-source month-by-month buy vs rent comparison tool. Canadian mortgage math (CMHC, semi-annual compounding), optional sale costs, and editable assumptions.",
+        "@id": "https://rentorbuy.smmiri.com/#app",
+        "name": "Rent or Buy Calculator",
+        "alternateName": ["Buy vs Rent & Invest", "Canadian Buy vs Rent Calculator"],
+        "url": "https://rentorbuy.smmiri.com/",
+        "description": "Open-source Canadian buy vs rent comparison. Same cash at closing for both paths; monthly mortgage, rent, and portfolio updates; province-aware closing costs and simplified exit taxes.",
         "applicationCategory": "FinanceApplication",
         "applicationSubCategory": "Mortgage Calculator",
         "operatingSystem": "Any",
@@ -90,61 +87,61 @@
         "license": "https://opensource.org/licenses/MIT",
         "featureList": [
           "Canadian semi-annual mortgage compounding",
-          "CMHC default insurance tiers and surcharges",
-          "Optional sale-cost penalty (keep vs sell)",
-          "Symmetric monthly cash flow (cheaper side compounds the surplus)",
-          "Year-by-year breakdown",
-          "Editable assumptions with help tooltips",
-          "MIT licensed, no tracking"
+          "CMHC default insurance tiers",
+          "Province-aware cash to close (LTT, GST/HST)",
+          "Symmetric monthly housing budget",
+          "Annual portfolio capital gains tax",
+          "Principal residence exemption on home sale",
+          "Optional sale costs at horizon",
+          "Year-by-year wealth chart"
         ]
       }
     </script>
 
-    <!-- Structured data: FAQ schema for the methodology section -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        "@id": "https://buy-vs-rent.example.com/#faq",
+        "@id": "https://rentorbuy.smmiri.com/#faq",
         "mainEntity": [
           {
             "@type": "Question",
             "name": "How is the Canadian mortgage payment computed?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Canadian mortgages compound semi-annually under the Interest Act. The effective monthly rate is (1 + r/2)^(1/6) − 1, slightly less than r/12. The monthly payment uses the standard amortization formula: P · r_m · (1 + r_m)^n / ((1 + r_m)^n − 1)."
+              "text": "Quoted rates compound semi-annually. Effective monthly rate: (1 + r/2)^(1/6) − 1. Payment uses standard amortization on principal including CMHC when down payment is below 20%."
             }
           },
           {
             "@type": "Question",
-            "name": "When is CMHC mortgage insurance required?",
+            "name": "Does the renter invest the same money as the buyer at closing?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "CMHC default insurance is required on Canadian mortgages with less than 20% down. Premiums are 2.8% for 15–19.99% down, 3.1% for 10–14.99%, and 4.0% for 5–9.99%. An additional 0.20% surcharge applies if the amortization exceeds 25 years."
+              "text": "Yes. The renter is modeled with down payment plus closing costs invested at the market return. The buyer puts the down payment into equity and pays closing costs to third parties."
             }
           },
           {
             "@type": "Question",
-            "name": "What does \"apply sale costs\" do?",
+            "name": "How are exit taxes handled?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "When on, the buyer's wealth is computed as property value minus sale costs minus mortgage balance, the cash you'd take home if you sold. Turn it off if you plan to keep the property; the buy line then reflects paper equity, which is property value minus mortgage balance."
+              "text": "Portfolio gains are taxed annually in a non-registered account. Home sale at the horizon uses the principal residence exemption by default (no tax on the home for a full PR). Marginal rate and inclusion rate are editable."
             }
           },
           {
             "@type": "Question",
-            "name": "How does the model handle months when renting costs more than owning?",
+            "name": "What does apply sale costs do?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "The model is symmetric. Each month it sets the cash outlay to max(owning_cost, rent) and the cheaper side invests the difference at the market return. If renting is more expensive, the buyer compounds the surplus into a side portfolio. This keeps the comparison fair when ownership flips from more expensive to less expensive over time."
+              "text": "When on, buyer wealth at exit reflects selling: property value minus realtor and legal costs minus mortgage. When off, wealth is paper equity (property minus mortgage) if you keep the home."
             }
           },
           {
             "@type": "Question",
-            "name": "What is not included in the model?",
+            "name": "What is not included?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Included: CMHC insurance, semi-annual compounding, province-aware land transfer tax and FTB rebates, GST/HST on new construction, PST on CMHC where applicable, legal/title/inspection, optional sale costs. Not included: income taxes (TFSA, RRSP, capital gains exemption), refinancing or renewal risk, major one-off repairs beyond monthly maintenance, renter's insurance, moving costs. Constant growth rates. Directional sensitivity tool only, not financial advice."
+              "text": "Not modeled: TFSA/FHSA room, RRSP withdrawals, refinancing, rent control, moving costs, or detailed dividend tax. Results are directional, not financial advice."
             }
           }
         ]
@@ -155,19 +152,24 @@
     <div id="root"></div>
 
     <noscript>
-      <div style="max-width:720px;margin:48px auto;padding:24px;font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;color:#0f172a;line-height:1.6">
-        <h1 style="margin:0 0 12px;font-size:28px">Buy vs Rent &amp; Invest</h1>
+      <article
+        style="max-width:720px;margin:48px auto;padding:24px;font-family:system-ui,sans-serif;color:#0f172a;line-height:1.6"
+      >
+        <h1 style="margin:0 0 12px;font-size:28px">Rent or Buy? Canadian Buy vs Rent Calculator</h1>
         <p>
-          This calculator compares two long-running decisions: buying a home and either selling or keeping it, or
-          renting an equivalent home and investing the difference. The model is a month-by-month simulation of a
-          Canadian mortgage with CMHC default insurance, province-aware closing costs, semi-annual compounding,
-          optional sale costs, and a symmetric monthly cash-flow assumption.
+          Compare buying a Canadian home (and selling or keeping it at the end of your horizon) with renting a
+          similar home and investing the same upfront cash plus monthly surplus when owning costs more.
         </p>
         <p>
-          The full calculator requires JavaScript. The source is open under MIT; read the README in the repository
-          for the math and a quickstart.
+          The model includes CMHC insurance, semi-annual mortgage compounding, province-aware closing costs (land
+          transfer tax, GST/HST on new builds), optional sale costs at exit, and simplified capital gains tax
+          (annual tax on the renter portfolio; principal residence exemption on the home by default).
         </p>
-      </div>
+        <p>
+          The interactive calculator requires JavaScript. Source code:
+          <a href="https://github.com/smmiri/mortgage-vs-invest">github.com/smmiri/mortgage-vs-invest</a> (MIT).
+        </p>
+      </article>
     </noscript>
 
     <script type="module" src="/src/main.jsx"></script>

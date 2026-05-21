@@ -1,8 +1,6 @@
-# Buy vs Rent & Invest — open-source calculator.
-# Crawl everything; respect search-engine guidance.
+# Buy vs Rent & Invest — open-source Canadian buy vs rent calculator.
 
 User-agent: *
 Allow: /
 
-# Replace the URL below with the deployed origin before launch.
-Sitemap: https://buy-vs-rent.example.com/sitemap.xml
+Sitemap: https://rentorbuy.smmiri.com/sitemap.xml

@@ -5,7 +5,7 @@ Open-source calculator that compares two long-running paths over the same time h
 1. **Buy** a home, pay down a Canadian-style mortgage, and either sell at the end (optional transaction costs) or keep the property.
 2. **Rent** an equivalent home and invest the same upfront cash plus any monthly surplus at a market return.
 
-**Live app:** [smmiri.github.io/mortgage-vs-invest](https://smmiri.github.io/mortgage-vs-invest/)
+**Live app:** [rentorbuy.smmiri.com](https://rentorbuy.smmiri.com/) (also [github.io mirror](https://smmiri.github.io/mortgage-vs-invest/))
 
 The simulation is month-by-month, implemented as pure functions in `src/lib/`. The web UI is a thin layer on top. Core logic is in **`src/lib/model.js`** (wealth paths) and **`src/lib/closing-costs.js`** (Canadian cash-to-close).
 
@@ -157,7 +157,7 @@ Tax and closing-cost rules change with budgets and indexing; figures are **estim
 
 ## Using this repository
 
-- **Use the app:** open the [live calculator](https://smmiri.github.io/mortgage-vs-invest/) and adjust inputs; methodology and a worked example are in the app.
+- **Use the app:** open [rentorbuy.smmiri.com](https://rentorbuy.smmiri.com/) and adjust inputs; methodology and a worked example are in the app.
 - **Fork or clone:** MIT license. The model is dependency-free in `src/lib/`; import `simulate()` from `src/lib/model.js` in your own tooling or tests (`npm test` runs `node --test` on the lib tests).
 - **Issues and PRs:** welcome; keep changes to the model tested and document new inputs in `FIELD_META` and the in-app methodology section.
 
