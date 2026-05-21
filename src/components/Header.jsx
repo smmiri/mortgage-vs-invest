@@ -1,17 +1,22 @@
+import { useTranslation } from "react-i18next";
+import LanguageToggle from "./LanguageToggle.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
 
 export default function Header({ repoUrl }) {
+  const { t } = useTranslation();
+
   return (
     <header className="header-bar">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6">
         <a href="#top" className="flex items-center gap-2 font-semibold text-heading">
           <Logo />
-          <span className="text-sm sm:text-base">Buy vs Rent &amp; Invest</span>
+          <span className="text-sm sm:text-base">{t("header.title")}</span>
         </a>
         <nav className="flex flex-wrap items-center justify-end gap-2 sm:gap-3 text-sm">
+          <LanguageToggle />
           <ThemeToggle />
           <a href="#methodology" className="hidden text-body hover:text-heading sm:inline">
-            Methodology
+            {t("header.methodology")}
           </a>
           {repoUrl ? (
             <a
@@ -21,7 +26,7 @@ export default function Header({ repoUrl }) {
               className="inline-flex items-center gap-1.5 rounded-full border border-default px-3 py-1.5 text-xs font-medium text-label hover:border-slate-400 hover:text-heading dark:hover:border-slate-500"
             >
               <GitHubIcon />
-              Source
+              {t("header.source")}
             </a>
           ) : null}
         </nav>

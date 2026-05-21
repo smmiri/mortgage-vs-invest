@@ -1,0 +1,15 @@
+{
+  "disclaimer": "<strong>Not financial advice.</strong> Simplified month-by-month model for Canadian buyers: includes CMHC insurance, province-aware land transfer tax, GST/HST on new builds, optional sale costs, and simplified exit capital gains (PRE on home; taxable portfolio). Excludes annual tax drag, TFSA/FHSA room, RRSP, refinancing/renewal risk, large one-off repairs, and moving or renter's insurance. Assumes constant growth rates. Use as a sensitivity tool, not a recommendation.",
+  "navLegal": "Legal",
+  "privacy": "Privacy",
+  "terms": "Terms",
+  "github": "GitHub",
+  "mit": "MIT licensed",
+  "privacyTitle": "Privacy",
+  "privacyP1": "This calculator runs entirely in your browser. Your inputs are not sent to a server. The only data stored locally is a first-party cookie named <code>rvb_inputs</code> (calculator assumptions, up to one year) so settings persist when you return. Use <strong>Reset to defaults</strong> in the calculator to clear it. No analytics or advertising trackers are used.",
+  "privacyP2": "Fonts are self-hosted in the app bundle (no third-party font requests). Language preference is stored in local storage. If you contact the author via GitHub, that is governed by GitHub's privacy policy, not this site.",
+  "termsTitle": "Terms",
+  "termsP1": "The site and model are provided <strong>as is</strong>, without warranty. Results are estimates for educational comparison only, not tax filings, mortgage approvals, or investment advice. Tax and closing-cost rules in the model were last reviewed for <strong>{{rulesDate}}</strong>; provincial and federal programs change. Confirm figures with a mortgage broker, accountant, or lawyer before making decisions.",
+  "termsP2": "To the fullest extent permitted by law, the authors are not liable for any loss arising from use of this tool. The open-source software is licensed under MIT (see repository).",
+  "footerMeta": "Tax & closing-cost model last reviewed: {{rulesDate}}. Calculator cookie: <code>rvb_inputs</code>, 365 days, SameSite=Lax. Locale: <code>rvb_locale</code> in local storage."
+}

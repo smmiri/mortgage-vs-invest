@@ -1,0 +1,199 @@
+{
+  "skipToContent": "Skip to content",
+  "header": {
+    "title": "Buy vs Rent & Invest",
+    "methodology": "Methodology",
+    "source": "Source",
+    "language": "Language"
+  },
+  "hero": {
+    "badge": "Open-source · Built for Canadian mortgages",
+    "title": "Should you buy or rent & invest?",
+    "p1": "I kept asking the same question: what if I rented instead of buying, invested the same cash up front (down payment plus closing costs), and kept topping up the portfolio whenever owning would have cost more? I built this calculator to run that comparison year by year. Each month it updates the mortgage, rent, ownership costs, and both portfolios, then shows which path is ahead. CMHC, closing costs, rent inflation, and Canadian mortgage math are all built in.",
+    "modelLabel": "What's in the model:",
+    "p2": "semi-annual mortgage rates, province-level cash to close, optional sale costs at the end, and sliders for rent, growth, taxes, and the rest so you can stress-test your own assumptions."
+  },
+  "scopeBanner": "This model uses Canadian mortgage rules, CMHC, provincial land transfer tax, and CRA-style capital gains — not Iran or other countries. Amounts are in CAD.",
+  "calculator": {
+    "assumptions": "Assumptions",
+    "assumptionsHint": "Drag sliders or type values. Your assumptions are saved in this browser automatically. Hover",
+    "helpIcon": "i",
+    "helpSuffix": "for help on each field.",
+    "reset": "Reset to defaults",
+    "results": "Results",
+    "resultsHint": "Updates live as you change inputs above."
+  },
+  "columns": {
+    "property": "Property",
+    "mortgage": "Mortgage & ownership",
+    "rent": "Rent & investing",
+    "horizon": "Horizon & exit"
+  },
+  "hints": {
+    "estClosing": "Est. closing costs",
+    "editClosing": "Edit in cash to close",
+    "year1TopUp": "Year 1 renter top-up",
+    "owningMore": "Owning costs more than rent",
+    "rentingMore": "Renting costs more than owning",
+    "crossover": "Crossover",
+    "crossoverAfterTax": "After-tax lines (annual portfolio tax)",
+    "crossoverPreTax": "When buy vs rent wealth lines meet"
+  },
+  "saleAtExit": {
+    "title": "Sale costs at exit",
+    "hint": "On if you sell at the horizon; off to keep paper equity.",
+    "aria": "Apply sale costs"
+  },
+  "amort": {
+    "y25": "25 years",
+    "y25hint": "Standard cap for insured mortgages (down < 20%)",
+    "y30": "30 years",
+    "y30hint": "Extended amortization (+0.20% CMHC premium when insured)"
+  },
+  "cmhc": {
+    "compact": "<strong>CMHC required:</strong> {{rate}} premium ({{premium}}) rolled into principal → <strong>{{principal}}</strong> financed{{surcharge}}.",
+    "surcharge30": " (+0.20% rate for 30-yr amort)",
+    "title": "CMHC mortgage default insurance (required)",
+    "p1": "With less than 20% down, lenders require CMHC (or equivalent) insurance. The premium is {{rate}} of the financed amount ({{premium}}) and is added to your mortgage principal, not paid in cash at closing.",
+    "baseMortgage": "Base mortgage: {{base}} → principal with CMHC: <strong>{{total}}</strong>",
+    "surchargeLine": "30-year amortization adds a 0.20% surcharge on the CMHC premium rate.",
+    "pstLine": "PST on the CMHC premium ({{amount}}) is in cash to close."
+  },
+  "summary": {
+    "afterTaxDelta": "After-tax delta (year {{year}})",
+    "delta": "Delta at year {{year}}",
+    "afterTaxHelp": "Buyer after-tax wealth minus renter after-tax wealth at the horizon. Matches the chart. Portfolio tax accrues annually; home sale tax at exit when selling (PRE by default).",
+    "deltaHelp": "Buyer net wealth minus renter net wealth at the end of the time horizon. Positive means the buy path has higher net wealth (not a recommendation).",
+    "cashAtClose": "Cash at closing",
+    "cashSublabel": "Down payment + {{closing}} closing costs",
+    "cashHelp": "Total cash the buyer hands over at closing: down payment plus the province-aware closing-cost breakdown (LTT, GST/HST net of rebates, PST on CMHC, legal/title/inspection). The renter is assumed to invest the same total amount in the market portfolio at year 0.",
+    "monthlyPI": "Monthly P&I",
+    "monthlyPISub": "Mortgage payment (principal + interest)",
+    "monthlyPIHelp": "Computed with Canadian semi-annual compounding: effective monthly rate = (1 + r/2)^(1/6) − 1.",
+    "topUp": "Initial monthly top-up",
+    "topUpHelp": "The renter's monthly investment comes from this gap. We assume both paths spend max(owning_cost, rent) on housing each month; the cheaper side invests the difference at the market return. Floored at zero, never negative.",
+    "cmhc": "CMHC insurance",
+    "cmhcSubRate": "{{rate}} of financed amount · rolled into principal",
+    "cmhcNotRequired": "≥ 20% down, no default insurance",
+    "cmhcHelp": "Mandatory CMHC (or equivalent) default insurance when down payment is below 20%. The premium is added to the mortgage balance, not paid as cash at closing (PST on the premium may appear in closing costs in ON/QC/SK/MB).",
+    "outcomeEven": "Paths even",
+    "outcomeBuy": "Buy path ahead",
+    "outcomeRent": "Rent path ahead",
+    "preTax": "Pre-tax {{delta}}",
+    "homeTax": "Home {{tax}}",
+    "portfolioTax": "Portfolio {{tax}}",
+    "noCrossover": "No crossover within {{years}} years",
+    "crossoverAt": "Lines cross at year {{year}}"
+  },
+  "pathTotals": {
+    "rentPaid": "Total rent paid",
+    "owningCost": "Total ownership cost",
+    "interest": "Interest paid",
+    "principal": "Principal paid down",
+    "overYears": "over {{years}} yrs",
+    "onMortgage": "on the mortgage",
+    "reducesBalance": "reduces balance"
+  },
+  "chart": {
+    "title": "Wealth trajectory",
+    "titleAfterTax": "Wealth trajectory (after tax)",
+    "afterTaxCaption": "Lines match the headline delta. Portfolio gains are taxed each year (non-registered assumption); home sale tax applies at year {{year}} only when selling.",
+    "preTaxCaption": "Both paths start with the same cash stake. The buy line tracks liquid equity plus any monthly surplus invested; the rent line tracks the market portfolio plus monthly top-ups.",
+    "buy": "Buy",
+    "rent": "Rent & invest",
+    "crossover": "Crossover · Y{{year}}",
+    "today": "Today",
+    "year": "Year {{year}}",
+    "difference": "Difference",
+    "preTaxExit": "Pre-tax at exit: buy {{buy}}, rent {{rent}}"
+  },
+  "yearTable": {
+    "title": "Year-by-year detail",
+    "hint": "Property value, mortgage balance, equity, monthly cash flow.",
+    "show": "Show",
+    "hide": "Hide",
+    "year": "Year",
+    "property": "Property",
+    "mortgage": "Mortgage",
+    "equity": "Equity",
+    "buyWealth": "Buy wealth",
+    "rentWealth": "Rent wealth",
+    "monthlyRent": "Monthly rent",
+    "monthlyOwn": "Monthly own",
+    "delta": "Delta",
+    "today": "Today"
+  },
+  "exitTax": {
+    "title": "Exit taxes (simplified)",
+    "tip": "Canadian capital gains: portfolio gains taxed each year (non-registered; no TFSA/FHSA room). Home sale taxed at the horizon only when selling; full principal residence exemption by default.",
+    "caption": "Annual tax on portfolio growth; home tax at exit when selling.",
+    "aria": "Estimate exit taxes",
+    "taxableBanner": "<strong>Taxable portfolio assumption.</strong> Portfolio gains are taxed each year as if held in a non-registered account. TFSA, FHSA, and RRSP sheltering are not modeled. Turn exit taxes off, or lower the marginal rate, to approximate tax-sheltered investing.",
+    "pre": {
+      "full": "Principal residence",
+      "partial": "Partial years",
+      "none": "Not exempt"
+    },
+    "summary": "Portfolio tax <strong>{{rentTax}}</strong> (renter, annual) · Home {{home}} · After-tax delta <strong>{{delta}}</strong>",
+    "homePreZero": "PRE: $0",
+    "homeTax": "tax {{tax}}",
+    "homeNA": "N/A (not selling)",
+    "crossoverMove": " · Crossover moves from Y{{pre}} (pre-tax) to Y{{post}} (after-tax)"
+  },
+  "closing": {
+    "title": "Cash to close",
+    "caption": "Province, buyer status, and new-build flags drive LTT, GST/HST, and PST on CMHC.",
+    "total": "Total",
+    "auto": "Auto",
+    "manual": "Manual",
+    "province": "Province",
+    "provinceTip": "Drives land transfer tax brackets, GST/HST or QST handling, and provincial new-housing rebates.",
+    "ftb": "First-time home buyer",
+    "ftbHelp": "Unlocks: BC PTT exemption (full ≤ $835k, partial to $860k), Ontario LTT $4,000 rebate, Toronto MLTT $4,475 rebate, PEI exemption ≤ $200k, and the 2025 federal First-Time Home Buyer GST Rebate on new homes (full ≤ $1M, phased to $1.5M).",
+    "newBuild": "New construction",
+    "newBuildHelp": "Applies GST/HST on the purchase price (resale homes are exempt). Federal and provincial new-housing rebates may apply.",
+    "torontoLtt": "Include Toronto MLTT",
+    "torontoHelp": "Adds Toronto's municipal land transfer tax on top of Ontario provincial LTT (Toronto only).",
+    "montrealLtt": "Montreal welcome tax (full brackets)",
+    "montrealHelp": "Uses Montreal municipal brackets instead of Quebec provincial baseline only.",
+    "breakdownShow": "Show breakdown",
+    "breakdownHide": "Hide breakdown",
+    "totalClosing": "Total closing costs",
+    "confirm": "Model estimate. Confirm eligibility and amounts with a lawyer before signing.",
+    "newBuildLabel": "Newly built / new construction",
+    "newBuildHelp": "Resale homes are GST/HST exempt. New construction is taxable: federal GST 5% (with rebates) plus any provincial portion in HST provinces. In BC, also unlocks the Newly Built Home Exemption from PTT (full ≤ $1.1M, partial to $1.15M).",
+    "torontoLabel": "Property is inside the City of Toronto",
+    "torontoHelp": "Toronto's Municipal Land Transfer Tax applies to properties within the City of Toronto's boundaries. Surrounding GTA cities do NOT pay MLTT.",
+    "montrealLabel": "Property is inside the City of Montréal",
+    "montrealHelp": "Montréal's welcome tax adds higher brackets above $500k vs the provincial Quebec baseline.",
+    "lineItemBreakdown": "Line-item breakdown"
+  },
+  "methodology": {
+    "title": "How the math works",
+    "p1": "Everything runs in your browser; inputs never leave your device. Each month both paths share the same housing budget, <code>max(owning_cost, rent)</code>, and the cheaper side invests the difference. When owning costs more (typical early years), the renter's monthly top-up is that gap, funded from the same implicit budget as the buyer's payment.",
+    "p2": "At year 0 the buy line shows only the down payment; the renter's line includes down payment plus closing costs, so the gap between curves equals cash-to-close. The chart marks the crossover year when net wealth flips. Formulas, CMHC tiers, provincial taxes, and exclusions are documented in the <readme>README on GitHub</readme>. Provincial LTT, GST/HST rebates, and CMHC tiers were last reviewed for <strong>{{rulesDate}}</strong>.",
+    "exampleTitle": "Worked example (default scenario)",
+    "exampleHint": "Default inputs walked through step by step. Change sliders above to see your own numbers in the chart.",
+    "step1Title": "CMHC tier",
+    "step1": "Down payment {{dp}} → premium rate {{rate}} → CMHC {{premium}}.",
+    "step2Title": "Principal financed",
+    "step2": "{{base}} + CMHC = {{total}}.",
+    "step3Title": "Monthly rate & P&I",
+    "step3": "Canadian <code>r_m</code> = <strong>{{rate}}</strong>/mo → payment <strong>{{payment}}</strong>.",
+    "step4Title": "Cash at closing",
+    "step4": "Down {{down}} + closing {{closing}} = {{total}} total cash (renter invests all; buyer keeps down in equity).",
+    "step5Title": "Year 1 top-up",
+    "step5": "Owning {{own}}/mo vs rent {{rent}} → renter invests {{topUp}}/mo at market return.",
+    "realtor": "P&I should match <link>realtor.ca</link> for the same price, down payment, rate, and amortization; we report P&I separately from property tax and condo fees."
+  },
+  "theme": {
+    "label": "Color theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "suffix": {
+    "yrs": "yrs",
+    "mo": "mo"
+  }
+}

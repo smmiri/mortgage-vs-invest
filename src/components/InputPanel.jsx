@@ -1,5 +1,7 @@
-import { DEFAULT_INPUTS, FIELD_META } from "../lib/defaults.js";
-import { formatCurrency, formatSignedCurrency } from "../lib/format.js";
+import { useTranslation } from "react-i18next";
+import { DEFAULT_INPUTS } from "../lib/defaults.js";
+import { useFieldMeta } from "../hooks/useFieldMeta.js";
+import { useFormat } from "../hooks/useFormat.js";
 import InputField from "./InputField.jsx";
 import SliderField from "./SliderField.jsx";
 import DownPaymentSlider from "./DownPaymentSlider.jsx";
@@ -16,6 +18,10 @@ function renderField(name, value, meta, onChange) {
 }
 
 export default function InputPanel({ inputs, results, onChange, onReset }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const FIELD_META = useFieldMeta();
+
   const handleField = (name, value) => {
     const patch = { [name]: value };
     if (name === "years" && inputs.preExemption === "partial") {
@@ -43,35 +49,31 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
   const { final, initialTopUp, closingCosts } = results;
   const breakevenText =
     final.breakeven == null
-      ? `No crossover within ${inputs.years} yrs`
-      : `Crossover at year ${final.breakeven}`;
+      ? t("summary.noCrossover", { years: inputs.years })
+      : t("summary.crossoverAt", { year: final.breakeven });
 
   return (
     <div aria-label="Model inputs">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-heading">Assumptions</h2>
+          <h2 className="text-lg font-semibold text-heading">{t("calculator.assumptions")}</h2>
           <p className="mt-0.5 text-sm text-muted">
-            Drag sliders or type values. Your assumptions are saved in this browser automatically. Hover{" "}
+            {t("calculator.assumptionsHint")}{" "}
             <span className="inline-flex h-3.5 w-3.5 translate-y-px items-center justify-center rounded-full border border-default text-[8px] text-muted">
-              i
+              {t("calculator.helpIcon")}
             </span>{" "}
-            for help on each field.
+            {t("calculator.helpSuffix")}
           </p>
         </div>
         {onReset ? (
-          <button
-            type="button"
-            onClick={onReset}
-            className="btn-ghost"
-          >
-            Reset to defaults
+          <button type="button" onClick={onReset} className="btn-ghost">
+            {t("calculator.reset")}
           </button>
         ) : null}
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <InputColumn title="Property">
+        <InputColumn title={t("columns.property")}>
           <InputField
             name="propertyPrice"
             value={inputs.propertyPrice}
@@ -85,17 +87,17 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
             onChange={handleDownPayment}
           />
           <ColumnHint
-            label="Est. closing costs"
-            value={formatCurrency(closingCosts)}
+            label={t("hints.estClosing")}
+            value={fmt.formatCurrency(closingCosts)}
             detail={
               <a href="#cash-to-close" className="link-accent">
-                Edit in cash to close ↓
+                {t("hints.editClosing")}
               </a>
             }
           />
         </InputColumn>
 
-        <InputColumn title="Mortgage & ownership">
+        <InputColumn title={t("columns.mortgage")}>
           <AmortizationSelector
             value={inputs.amortization}
             onChange={(years) => handleField("amortization", years)}
@@ -108,31 +110,29 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
           {renderField("propertyGrowth", inputs.propertyGrowth, FIELD_META.propertyGrowth, handleField)}
         </InputColumn>
 
-        <InputColumn title="Rent & investing">
+        <InputColumn title={t("columns.rent")}>
           {renderField("initialRent", inputs.initialRent, FIELD_META.initialRent, handleField)}
           {renderField("rentIncrease", inputs.rentIncrease, FIELD_META.rentIncrease, handleField)}
           {renderField("marketReturn", inputs.marketReturn, FIELD_META.marketReturn, handleField)}
           <ColumnHint
-            label="Year 1 renter top-up"
-            value={formatSignedCurrency(initialTopUp)}
-            detail={initialTopUp >= 0 ? "Owning costs more than rent" : "Renting costs more than owning"}
+            label={t("hints.year1TopUp")}
+            value={fmt.formatSignedCurrency(initialTopUp)}
+            detail={initialTopUp >= 0 ? t("hints.owningMore") : t("hints.rentingMore")}
           />
         </InputColumn>
 
-        <InputColumn title="Horizon & exit">
+        <InputColumn title={t("columns.horizon")}>
           {renderField("years", inputs.years, FIELD_META.years, handleField)}
           <div className="space-y-3 rounded-lg border border-subtle bg-surface-muted p-3">
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-medium text-heading">Sale costs at exit</h4>
-                <p className="mt-0.5 text-[11px] leading-snug text-muted">
-                  On if you sell at the horizon; off to keep paper equity.
-                </p>
+                <h4 className="text-sm font-medium text-heading">{t("saleAtExit.title")}</h4>
+                <p className="mt-0.5 text-[11px] leading-snug text-muted">{t("saleAtExit.hint")}</p>
               </div>
               <Switch
                 checked={inputs.applySaleCost}
                 onChange={(v) => handleToggle("applySaleCost", v)}
-                aria-label="Apply sale costs"
+                aria-label={t("saleAtExit.aria")}
               />
             </div>
             {inputs.applySaleCost ? (
@@ -145,12 +145,12 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
             ) : null}
           </div>
           <ColumnHint
-            label="Crossover"
+            label={t("hints.crossover")}
             value={breakevenText}
             detail={
               inputs.modelExitTaxes !== false
-                ? "After-tax lines (annual portfolio tax)"
-                : "When buy vs rent wealth lines meet"
+                ? t("hints.crossoverAfterTax")
+                : t("hints.crossoverPreTax")
             }
           />
         </InputColumn>
@@ -191,7 +191,7 @@ function ColumnHint({ label, value, detail }) {
   return (
     <div className="mt-auto rounded-lg border border-dashed border-default bg-surface-muted px-3 py-2.5">
       <div className="text-[11px] font-medium uppercase tracking-wide text-caption">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold tabular-nums text-heading">{value}</div>
+      <div className="mt-0.5 text-sm font-semibold tabular-nums text-heading numeric-ltr">{value}</div>
       {detail ? <div className="mt-1 text-[11px] text-muted">{detail}</div> : null}
     </div>
   );

@@ -1,13 +1,15 @@
+import { useTranslation } from "react-i18next";
 import InfoTip from "./InfoTip.jsx";
-import { formatCurrency, formatPercent } from "../lib/format.js";
-
-const OPTIONS = [
-  { years: 25, label: "25 years", hint: "Standard cap for insured mortgages (down < 20%)" },
-  { years: 30, label: "30 years", hint: "Extended amortization (+0.20% CMHC premium when insured)" },
-];
+import { useFormat } from "../hooks/useFormat.js";
 
 export default function AmortizationSelector({ value, onChange, meta, compact = false }) {
+  const { t } = useTranslation();
   const selected = value === 30 ? 30 : 25;
+
+  const options = [
+    { years: 25, label: t("amort.y25"), hint: t("amort.y25hint") },
+    { years: 30, label: t("amort.y30"), hint: t("amort.y30hint") },
+  ];
 
   return (
     <div>
@@ -22,7 +24,7 @@ export default function AmortizationSelector({ value, onChange, meta, compact = 
           compact ? "grid-cols-1" : "grid-cols-2"
         }`}
       >
-        {OPTIONS.map(({ years, label, hint }) => {
+        {options.map(({ years, label, hint }) => {
           const active = selected === years;
           return (
             <button
@@ -31,7 +33,7 @@ export default function AmortizationSelector({ value, onChange, meta, compact = 
               role="radio"
               aria-checked={active}
               onClick={() => onChange(years)}
-              className={`rounded-md px-3 py-2 text-left transition-colors ${
+              className={`rounded-md px-3 py-2 text-start transition-colors ${
                 active
                   ? "bg-indigo-600 text-white shadow-sm"
                   : "bg-surface-card text-label hover:bg-surface-inset"
@@ -57,6 +59,8 @@ export default function AmortizationSelector({ value, onChange, meta, compact = 
 
 /** Shown when down payment is below 20% — CMHC is mandatory and rolls into the mortgage. */
 export function CmhcInsuranceCallout({ results, inputs, variant = "full" }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const price = inputs.propertyPrice || 0;
   if (price <= 0 || price > 1_500_000) return null;
 
@@ -65,39 +69,39 @@ export function CmhcInsuranceCallout({ results, inputs, variant = "full" }) {
 
   const { cmhcPremium, cmhcRateApplied, totalPrincipal } = results;
   const baseMortgage = Math.max(0, price - inputs.downPayment);
+  const surcharge =
+    inputs.amortization > 25 ? t("cmhc.surcharge30") : "";
 
   if (variant === "compact") {
     return (
       <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
-        <span className="font-semibold text-amber-900 dark:text-amber-200">CMHC required:</span>{" "}
-        {formatPercent(cmhcRateApplied, 2)} premium ({formatCurrency(cmhcPremium)}) rolled into principal →{" "}
-        <strong>{formatCurrency(totalPrincipal)}</strong> financed
-        {inputs.amortization > 25 ? " (+0.20% rate for 30-yr amort)" : ""}.
+        <span className="font-semibold text-amber-900 dark:text-amber-200">CMHC:</span>{" "}
+        {fmt.formatPercent(cmhcRateApplied, 2)} ({fmt.formatCurrency(cmhcPremium)}) →{" "}
+        <strong className="numeric-ltr">{fmt.formatCurrency(totalPrincipal)}</strong>
+        {surcharge}
       </p>
     );
   }
 
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
-      <div className="font-semibold text-amber-900 dark:text-amber-200">CMHC mortgage default insurance (required)</div>
+      <div className="font-semibold text-amber-900 dark:text-amber-200">{t("cmhc.title")}</div>
       <p className="mt-1">
-        With less than 20% down, lenders require CMHC (or equivalent) insurance. The premium is{" "}
-        <strong>{formatPercent(cmhcRateApplied, 2)}</strong> of the financed amount (
-        <strong>{formatCurrency(cmhcPremium)}</strong>) and is <strong>added to your mortgage principal</strong>, not
-        paid in cash at closing.
+        {t("cmhc.p1", {
+          rate: fmt.formatPercent(cmhcRateApplied, 2),
+          premium: fmt.formatCurrency(cmhcPremium),
+        })}
       </p>
       <ul className="mt-2 list-inside list-disc space-y-0.5 text-amber-900/90 dark:text-amber-200/90">
         <li>
-          Base mortgage: {formatCurrency(baseMortgage)} → principal with CMHC:{" "}
-          <strong>{formatCurrency(totalPrincipal)}</strong>
+          {t("cmhc.baseMortgage", {
+            base: fmt.formatCurrency(baseMortgage),
+            total: fmt.formatCurrency(totalPrincipal),
+          })}
         </li>
-        {inputs.amortization > 25 && cmhcRateApplied > 0 ? (
-          <li>30-year amortization adds a 0.20% surcharge on the CMHC premium rate.</li>
-        ) : null}
+        {inputs.amortization > 25 && cmhcRateApplied > 0 ? <li>{t("cmhc.surchargeLine")}</li> : null}
         {results.closingCostsBreakdown?.pstOnCmhc > 0 ? (
-          <li>
-            PST on the CMHC premium ({formatCurrency(results.closingCostsBreakdown.pstOnCmhc)}) is in cash to close.
-          </li>
+          <li>{t("cmhc.pstLine", { amount: fmt.formatCurrency(results.closingCostsBreakdown.pstOnCmhc) })}</li>
         ) : null}
       </ul>
     </div>

@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { canadianMonthlyRate, cmhcRate, minDownPayment, monthlyPaymentAmount, simulate } from "./model.js";
 import { DEFAULT_INPUTS } from "./defaults.js";
+import { WARNING_CODES } from "./warning-codes.js";
 
 test("canadianMonthlyRate uses semi-annual compounding", () => {
   // 1.0175^(1/6) - 1 ≈ 0.00289562
@@ -155,7 +156,7 @@ test("breakeven crossover is reported when the lines cross", () => {
 
 test("warnings flag down payment below the Canadian minimum", () => {
   const r = simulate({ ...DEFAULT_INPUTS, propertyPrice: 1_000_000, downPayment: 30_000 });
-  assert.ok(r.warnings.some((w) => /below Canadian minimum/i.test(w.text)));
+  assert.ok(r.warnings.some((w) => w.code === WARNING_CODES.DOWN_PAYMENT_BELOW_MIN));
 });
 
 test("default exit taxes: full PRE zero home tax, taxable portfolio taxed", () => {
@@ -205,5 +206,5 @@ test("after mortgage payoff, owning cost excludes P&I", () => {
 
 test("warnings when horizon exceeds amortization", () => {
   const r = simulate({ ...DEFAULT_INPUTS, years: 30, amortization: 25 });
-  assert.ok(r.warnings.some((w) => /exceeds amortization/i.test(w.text)));
+  assert.ok(r.warnings.some((w) => w.code === WARNING_CODES.HORIZON_EXCEEDS_AMORTIZATION));
 });

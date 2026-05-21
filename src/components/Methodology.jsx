@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import { DEFAULT_INPUTS } from "../lib/defaults.js";
 import {
   canadianMonthlyRate,
@@ -6,74 +7,95 @@ import {
   monthlyPaymentAmount,
   simulate,
 } from "../lib/model.js";
-import { formatCurrency, formatCurrencyDecimal, formatPercent } from "../lib/format.js";
+import { useFormat } from "../hooks/useFormat.js";
 import { RULES_AS_OF } from "../lib/site-meta.js";
 
 const README_PATH = "blob/main/README.md";
 
 export default function Methodology({ repoUrl = "https://github.com/smmiri/mortgage-vs-invest" }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const example = useMemo(() => buildWorkedExample(DEFAULT_INPUTS), []);
   const readmeUrl = `${repoUrl.replace(/\/$/, "")}/${README_PATH}`;
 
   return (
     <section className="rounded-2xl border border-default bg-surface-card p-6 shadow-sm sm:p-8">
-      <h2 className="text-lg font-semibold text-heading">How the math works</h2>
+      <h2 className="text-lg font-semibold text-heading">{t("methodology.title")}</h2>
+      <p className="mt-2 text-sm leading-relaxed text-body">{t("methodology.p1")}</p>
       <p className="mt-2 text-sm leading-relaxed text-body">
-        Everything runs in your browser; inputs never leave your device. Each month both paths share the same housing
-        budget, <Code>max(owning_cost, rent)</Code>, and the cheaper side invests the difference. When owning costs more
-        (typical early years), the renter&apos;s monthly top-up is that gap, funded from the same implicit budget as
-        the buyer&apos;s payment.
-      </p>
-      <p className="mt-2 text-sm leading-relaxed text-body">
-        At year 0 the buy line shows only the down payment; the renter&apos;s line includes down payment plus closing
-        costs, so the gap between curves equals cash-to-close. The chart marks the crossover year when net wealth
-        flips. Formulas, CMHC tiers, provincial taxes, and exclusions are documented in the{" "}
-        <a className="font-medium link-accent" href={readmeUrl} target="_blank" rel="noreferrer noopener">
-          README on GitHub
-        </a>
-        . Provincial LTT, GST/HST rebates, and CMHC tiers were last reviewed for{" "}
-        <strong className="font-medium text-label">{RULES_AS_OF}</strong>.
+        <Trans
+          i18nKey="methodology.p2"
+          values={{ rulesDate: RULES_AS_OF }}
+          components={{
+            strong: <strong className="font-medium text-label" />,
+            readme: (
+              <a className="font-medium link-accent" href={readmeUrl} target="_blank" rel="noreferrer noopener" />
+            ),
+          }}
+        />
       </p>
 
       <div className="mt-8 rounded-2xl border border-default bg-surface-inset p-5 sm:p-6">
-        <h3 className="text-base font-semibold text-heading">Worked example (default scenario)</h3>
-        <p className="mt-1 text-sm text-body">
-          Default inputs walked through step by step. Change sliders above to see your own numbers in the chart.
-        </p>
+        <h3 className="text-base font-semibold text-heading">{t("methodology.exampleTitle")}</h3>
+        <p className="mt-1 text-sm text-body">{t("methodology.exampleHint")}</p>
         <ol className="mt-4 space-y-3 text-sm text-label">
-          <Step n={1} title="CMHC tier">
-            Down payment {formatPercent(example.dpPct, 1)} → premium rate{" "}
-            <strong>{formatPercent(example.cmhcRate, 2)}</strong> → CMHC{" "}
-            <strong>{formatCurrency(example.cmhcPremium)}</strong>.
+          <Step n={1} title={t("methodology.step1Title")}>
+            {t("methodology.step1", {
+              dp: fmt.formatPercent(example.dpPct, 1),
+              rate: fmt.formatPercent(example.cmhcRate, 2),
+              premium: fmt.formatCurrency(example.cmhcPremium),
+            })}
           </Step>
-          <Step n={2} title="Principal financed">
-            {formatCurrency(example.baseMortgage)} + CMHC = <strong>{formatCurrency(example.totalPrincipal)}</strong>.
+          <Step n={2} title={t("methodology.step2Title")}>
+            {t("methodology.step2", {
+              base: fmt.formatCurrency(example.baseMortgage),
+              total: fmt.formatCurrency(example.totalPrincipal),
+            })}
           </Step>
-          <Step n={3} title="Monthly rate & P&amp;I">
-            Canadian <Code>r_m</Code> = <strong>{formatPercent(example.monthlyRate, 4)}</strong>/mo → payment{" "}
-            <strong>{formatCurrencyDecimal(example.monthlyPayment)}</strong>.
+          <Step n={3} title={t("methodology.step3Title")}>
+            <Trans
+              i18nKey="methodology.step3"
+              values={{
+                rate: fmt.formatPercent(example.monthlyRate, 4),
+                payment: fmt.formatCurrencyDecimal(example.monthlyPayment),
+              }}
+              components={{
+                code: <Code>r_m</Code>,
+                strong: <strong />,
+              }}
+            />
           </Step>
-          <Step n={4} title="Cash at closing">
-            Down {formatCurrency(example.downPayment)} + closing {formatCurrency(example.closingCosts)} ={" "}
-            <strong>{formatCurrency(example.cashAtClose)}</strong> total cash (renter invests all; buyer keeps down in
-            equity).
+          <Step n={4} title={t("methodology.step4Title")}>
+            {t("methodology.step4", {
+              down: fmt.formatCurrency(example.downPayment),
+              closing: fmt.formatCurrency(example.closingCosts),
+              total: fmt.formatCurrency(example.cashAtClose),
+            })}
           </Step>
-          <Step n={5} title="Year 1 top-up">
-            Owning {formatCurrencyDecimal(example.monthlyPayment + example.fixedExpenses)}/mo vs rent{" "}
-            {formatCurrency(example.initialRent)} → renter invests{" "}
-            <strong>
-              {formatCurrencyDecimal(example.monthlyPayment + example.fixedExpenses - example.initialRent)}
-            </strong>
-            /mo at market return.
+          <Step n={5} title={t("methodology.step5Title")}>
+            {t("methodology.step5", {
+              own: fmt.formatCurrencyDecimal(example.monthlyPayment + example.fixedExpenses),
+              rent: fmt.formatCurrency(example.initialRent),
+              topUp: fmt.formatCurrencyDecimal(
+                example.monthlyPayment + example.fixedExpenses - example.initialRent,
+              ),
+            })}
           </Step>
         </ol>
         <p className="mt-4 text-xs text-muted">
-          P&amp;I should match{" "}
-          <a className="link-accent" href="https://www.realtor.ca/calculator" target="_blank" rel="noreferrer noopener">
-            realtor.ca
-          </a>{" "}
-          for the same price, down payment, rate, and amortization; we report P&amp;I separately from property tax and
-          condo fees.
+          <Trans
+            i18nKey="methodology.realtor"
+            components={{
+              link: (
+                <a
+                  className="link-accent"
+                  href="https://www.realtor.ca/calculator"
+                  target="_blank"
+                  rel="noreferrer noopener"
+                />
+              ),
+            }}
+          />
         </p>
       </div>
     </section>

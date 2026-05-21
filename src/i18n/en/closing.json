@@ -1,0 +1,43 @@
+{
+  "lines": {
+    "bcFtbFull": "BC FTB Exemption (full)",
+    "bcFtbPartial": "BC FTB Exemption (partial phase-out)",
+    "bcNewlyBuilt": "BC Newly Built Home Exemption",
+    "onFtbRefund": "ON FTB Refund (up to $4,000)",
+    "qcMontreal": "Quebec welcome tax (Montreal brackets)",
+    "qcProvincial": "Quebec welcome tax (provincial baseline)",
+    "peiFtb": "PEI Real Property Transfer Tax (FTB exemption)",
+    "torontoFtb": "Toronto MLTT FTB Refund (up to $4,475)",
+    "torontoMltt": "Toronto Municipal Land Transfer Tax",
+    "gstFtb2025": "Federal 2025 First-Time Home Buyer GST Rebate",
+    "gstStandard": "Federal GST New Housing Rebate (CRA RC4028)",
+    "provincialNewHousing": "{{province}} New Housing Rebate (provincial portion)",
+    "qcQstRebate": "Quebec QST New Residential Rebate"
+  },
+  "lttLabel": {
+    "BC": "BC Property Transfer Tax",
+    "ON": "Ontario Land Transfer Tax",
+    "QC": "Quebec welcome tax",
+    "default": "{{province}} Land Transfer Tax"
+  },
+  "gstHst": "GST / HST on new construction",
+  "netOfRebates": "Net of rebates",
+  "pstCmhc": "PST on CMHC premium",
+  "pstCmhcSub": "{{province}} levies PST on the CMHC default insurance premium",
+  "legalTitle": "Legal, title, inspection",
+  "legalSub": "Lawyer ($1.5–2.5k) + title insurance ($300–500) + inspection / appraisal ($500–1k)",
+  "lttSchedule": "{{province}} schedule applied",
+  "noProvincialLtt": "{{province}} has no provincial land transfer tax",
+  "manualLabel": "Closing costs (manual)",
+  "manualSub": "User-provided lump sum",
+  "detail": {
+    "federalGst": "Federal GST (5%)",
+    "federalRebate": "  − Federal rebate",
+    "provincialHst": "Provincial HST",
+    "provincialRebate": "  − Provincial rebate",
+    "qcQst": "Quebec QST (9.975%)",
+    "qstRebate": "  − QST rebate",
+    "municipalLtt": "Municipal LTT",
+    "municipalFtb": "  − FTB rebate (municipal)"
+  }
+}
