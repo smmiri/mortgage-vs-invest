@@ -6,7 +6,7 @@ const OPTIONS = [
   { years: 30, label: "30 years", hint: "Extended amortization (+0.20% CMHC premium when insured)" },
 ];
 
-export default function AmortizationSelector({ value, onChange, meta }) {
+export default function AmortizationSelector({ value, onChange, meta, compact = false }) {
   const selected = value === 30 ? 30 : 25;
 
   return (
@@ -18,7 +18,9 @@ export default function AmortizationSelector({ value, onChange, meta }) {
       <div
         role="radiogroup"
         aria-label={meta.label}
-        className="grid grid-cols-2 gap-2 rounded-lg border border-slate-200 bg-slate-50 p-1"
+        className={`grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-1 ${
+          compact ? "grid-cols-1" : "grid-cols-2"
+        }`}
       >
         {OPTIONS.map(({ years, label, hint }) => {
           const active = selected === years;
@@ -29,20 +31,22 @@ export default function AmortizationSelector({ value, onChange, meta }) {
               role="radio"
               aria-checked={active}
               onClick={() => onChange(years)}
-              className={`rounded-md px-3 py-2.5 text-left transition-colors ${
+              className={`rounded-md px-3 py-2 text-left transition-colors ${
                 active
                   ? "bg-indigo-600 text-white shadow-sm"
                   : "bg-white text-slate-700 hover:bg-slate-100"
               }`}
             >
               <div className="text-sm font-semibold">{label}</div>
-              <div
-                className={`mt-0.5 text-[11px] leading-snug ${
-                  active ? "text-indigo-100" : "text-slate-500"
-                }`}
-              >
-                {hint}
-              </div>
+              {!compact && hint ? (
+                <div
+                  className={`mt-0.5 text-[11px] leading-snug ${
+                    active ? "text-indigo-100" : "text-slate-500"
+                  }`}
+                >
+                  {hint}
+                </div>
+              ) : null}
             </button>
           );
         })}
@@ -52,7 +56,7 @@ export default function AmortizationSelector({ value, onChange, meta }) {
 }
 
 /** Shown when down payment is below 20% — CMHC is mandatory and rolls into the mortgage. */
-export function CmhcInsuranceCallout({ results, inputs }) {
+export function CmhcInsuranceCallout({ results, inputs, variant = "full" }) {
   const price = inputs.propertyPrice || 0;
   if (price <= 0 || price > 1_500_000) return null;
 
@@ -61,6 +65,17 @@ export function CmhcInsuranceCallout({ results, inputs }) {
 
   const { cmhcPremium, cmhcRateApplied, totalPrincipal } = results;
   const baseMortgage = Math.max(0, price - inputs.downPayment);
+
+  if (variant === "compact") {
+    return (
+      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950">
+        <span className="font-semibold text-amber-900">CMHC required:</span>{" "}
+        {formatPercent(cmhcRateApplied, 2)} premium ({formatCurrency(cmhcPremium)}) rolled into principal →{" "}
+        <strong>{formatCurrency(totalPrincipal)}</strong> financed
+        {inputs.amortization > 25 ? " (+0.20% rate for 30-yr amort)" : ""}.
+      </p>
+    );
+  }
 
   return (
     <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950">
@@ -81,8 +96,7 @@ export function CmhcInsuranceCallout({ results, inputs }) {
         ) : null}
         {results.closingCostsBreakdown?.pstOnCmhc > 0 ? (
           <li>
-            PST on the CMHC premium ({formatCurrency(results.closingCostsBreakdown.pstOnCmhc)}) is in your cash-to-close
-            breakdown.
+            PST on the CMHC premium ({formatCurrency(results.closingCostsBreakdown.pstOnCmhc)}) is in cash to close.
           </li>
         ) : null}
       </ul>

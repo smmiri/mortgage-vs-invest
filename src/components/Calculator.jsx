@@ -5,6 +5,7 @@ import InputPanel from "./InputPanel.jsx";
 import Summary, { PathTotals } from "./Summary.jsx";
 import WealthChart from "./WealthChart.jsx";
 import YearTable from "./YearTable.jsx";
+import { CmhcInsuranceCallout } from "./AmortizationSelector.jsx";
 import Warnings from "./Warnings.jsx";
 
 export default function Calculator() {
@@ -12,35 +13,24 @@ export default function Calculator() {
   const results = useMemo(() => simulate(inputs), [inputs]);
 
   return (
-    <section id="calculator" className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start lg:gap-8">
-        <div className="lg:sticky lg:top-6">
-          <InputPanel inputs={inputs} results={results} onChange={setInputs} />
-          <ResetRow onReset={() => setInputs(DEFAULT_INPUTS)} />
-        </div>
+    <section id="calculator" className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12">
+      <InputPanel inputs={inputs} results={results} onChange={setInputs} onReset={() => setInputs(DEFAULT_INPUTS)} />
 
-        <div className="space-y-6">
-          <Warnings items={results.warnings} />
-          <Summary results={results} />
-          <WealthChart results={results} />
-          <PathTotals results={results} />
-          <YearTable results={results} />
-        </div>
+      <div className="mt-10 space-y-6 border-t border-slate-200 pt-10">
+        <header className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-slate-900">Results</h2>
+            <p className="text-sm text-slate-500">Updates live as you change inputs above.</p>
+          </div>
+        </header>
+
+        <Warnings items={results.warnings} />
+        <CmhcInsuranceCallout results={results} inputs={inputs} variant="compact" />
+        <Summary results={results} />
+        <WealthChart results={results} />
+        <PathTotals results={results} />
+        <YearTable results={results} />
       </div>
     </section>
-  );
-}
-
-function ResetRow({ onReset }) {
-  return (
-    <div className="mt-3 flex justify-end">
-      <button
-        type="button"
-        onClick={onReset}
-        className="text-xs font-medium text-slate-500 hover:text-slate-800"
-      >
-        Reset to defaults
-      </button>
-    </div>
   );
 }

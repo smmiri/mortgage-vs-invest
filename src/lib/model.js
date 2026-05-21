@@ -114,6 +114,12 @@ export function monthlyToEffectiveAnnual(monthlyRate) {
 //   This represents the "I keep the property" scenario where wealth is paper
 //   equity.
 import { computeClosingCosts } from "./closing-costs.js";
+import {
+  annualCapitalGainsTaxRate,
+  computeExitTaxes,
+  computeHomeSaleTax,
+  settleAnnualPortfolioTax,
+} from "./exit-taxes.js";
 
 export function simulate(inputs) {
   const {
@@ -130,6 +136,11 @@ export function simulate(inputs) {
     years,
     applySaleCost,
     saleCostPct,
+    modelExitTaxes = true,
+    preExemption = "full",
+    yearsAsPrincipalResidence,
+    marginalTaxRate = 40,
+    capitalGainsInclusionRate = 50,
     closingCostsMode = "auto",
     closingCostsManual = 0,
     province = "ON",
@@ -203,6 +214,14 @@ export function simulate(inputs) {
   let renterPortfolio = downPayment + closingCosts;
   let buyerPortfolio = 0;
   let expense = fixedExpenses || 0;
+  const useExitTax = modelExitTaxes !== false;
+  const portfolioTaxRate = useExitTax
+    ? annualCapitalGainsTaxRate(marginalTaxRate, capitalGainsInclusionRate)
+    : 0;
+  let renterCostBasis = downPayment + closingCosts;
+  let buyerPortfolioCostBasis = 0;
+  let rentTaxPaidAnnually = 0;
+  let buyerPortfolioTaxPaidAnnually = 0;
 
   const trajectory = [
     {
@@ -231,6 +250,10 @@ export function simulate(inputs) {
 
   for (let y = 1; y <= safeYears; y++) {
     const currentMonthlyRent = (initialRent || 0) * Math.pow(1 + (rentIncrease || 0) / 100, y - 1);
+    const renterStartOfYear = renterPortfolio;
+    const buyerPfStartOfYear = buyerPortfolio;
+    let renterYearContrib = 0;
+    let buyerYearContrib = 0;
 
     let monthOwningCost = 0;
     for (let m = 0; m < 12; m++) {
@@ -251,19 +274,75 @@ export function simulate(inputs) {
       const renterSurplus = cashCap - currentMonthlyRent;
       buyerPortfolio = buyerPortfolio * (1 + monthlyMarketRate) + buyerSurplus;
       renterPortfolio = renterPortfolio * (1 + monthlyMarketRate) + renterSurplus;
+      renterYearContrib += renterSurplus;
+      buyerYearContrib += buyerSurplus;
 
       expense = expense * (1 + monthlyExpenseGrowth);
+    }
+
+    const renterPreTax = renterPortfolio;
+    const buyerPfPreTax = buyerPortfolio;
+
+    if (useExitTax) {
+      const rentSettle = settleAnnualPortfolioTax({
+        startValue: renterStartOfYear,
+        endValue: renterPortfolio,
+        contributions: renterYearContrib,
+        costBasis: renterCostBasis,
+        taxRate: portfolioTaxRate,
+      });
+      renterPortfolio = rentSettle.afterTax;
+      renterCostBasis = rentSettle.newCostBasis;
+      rentTaxPaidAnnually += rentSettle.tax;
+
+      const buySettle = settleAnnualPortfolioTax({
+        startValue: buyerPfStartOfYear,
+        endValue: buyerPortfolio,
+        contributions: buyerYearContrib,
+        costBasis: buyerPortfolioCostBasis,
+        taxRate: portfolioTaxRate,
+      });
+      buyerPortfolio = buySettle.afterTax;
+      buyerPortfolioCostBasis = buySettle.newCostBasis;
+      buyerPortfolioTaxPaidAnnually += buySettle.tax;
     }
 
     const propertyValue = propertyPrice * Math.pow(1 + (propertyGrowth || 0) / 100, y);
     const liquidIfSold = propertyValue * saleMultiplier - mortgageBalance;
     const equity = propertyValue - mortgageBalance;
-    const buyWealth = downPayment + (liquidIfSold - initialLiquidBuy) + buyerPortfolio;
+    const buyWealth = downPayment + (liquidIfSold - initialLiquidBuy) + buyerPfPreTax;
+    const homeSale =
+      useExitTax && y === safeYears && applySaleCost
+        ? computeHomeSaleTax({
+            applySaleCost,
+            propertyPrice,
+            propertyValueAtExit: propertyValue,
+            saleCostPct,
+            yearsOwned: safeYears,
+            preExemption:
+              preExemption === "partial" || preExemption === "none" ? preExemption : "full",
+            yearsAsPrincipalResidence:
+              yearsAsPrincipalResidence != null ? yearsAsPrincipalResidence : safeYears,
+            marginalTaxRate,
+            capitalGainsInclusionRate,
+          })
+        : { buyTax: 0 };
+    const buyWealthAfterTax =
+      downPayment + (liquidIfSold - initialLiquidBuy) + buyerPortfolio - (y === safeYears ? homeSale.buyTax : 0);
 
     trajectory.push({
       year: y,
       buyWealth: Math.round(buyWealth),
-      rentWealth: Math.round(renterPortfolio),
+      rentWealth: Math.round(renterPreTax),
+      buyWealthAfterTax: Math.round(buyWealthAfterTax),
+      rentWealthAfterTax: Math.round(renterPortfolio),
+      portfolioTaxYear: useExitTax
+        ? Math.round(
+            (y === safeYears ? homeSale.buyTax : 0) +
+              (rentTaxPaidAnnually - (trajectory.at(-1)?.cumulativeRentTax ?? 0)),
+          )
+        : 0,
+      cumulativeRentTax: Math.round(rentTaxPaidAnnually),
       propertyValue: Math.round(propertyValue),
       mortgageBalance: Math.round(mortgageBalance),
       equity: Math.round(equity),
@@ -276,9 +355,44 @@ export function simulate(inputs) {
     });
   }
 
-  const finalBuy = trajectory.at(-1).buyWealth;
-  const finalRent = trajectory.at(-1).rentWealth;
-  const breakeven = findBreakevenYear(trajectory);
+  const finalPoint = trajectory.at(-1);
+  const finalBuy = finalPoint.buyWealth;
+  const finalRent = finalPoint.rentWealth;
+
+  trajectory[0].buyWealthAfterTax = trajectory[0].buyWealth;
+  trajectory[0].rentWealthAfterTax = trajectory[0].rentWealth;
+
+  const exitTaxes = computeExitTaxes({
+    modelExitTaxes: useExitTax,
+    applySaleCost,
+    propertyPrice,
+    propertyValueAtExit: finalPoint.propertyValue,
+    saleCostPct,
+    yearsOwned: safeYears,
+    preExemption: preExemption === "partial" || preExemption === "none" ? preExemption : "full",
+    yearsAsPrincipalResidence:
+      yearsAsPrincipalResidence != null ? yearsAsPrincipalResidence : safeYears,
+    marginalTaxRate,
+    capitalGainsInclusionRate,
+    renterPortfolio: finalRent,
+    renterCostBasis: renterCostBasis,
+    rentTaxPaidAnnually,
+    buyerPortfolioTaxPaidAnnually,
+  });
+
+  const buyAfterTax = finalPoint.buyWealthAfterTax;
+  const rentAfterTax = finalPoint.rentWealthAfterTax;
+
+  const chartTrajectory = useExitTax
+    ? trajectory.map((p) => ({
+        year: p.year,
+        buyWealth: p.buyWealthAfterTax,
+        rentWealth: p.rentWealthAfterTax,
+      }))
+    : trajectory;
+
+  const breakeven = findBreakevenYear(chartTrajectory);
+  const breakevenPreTax = useExitTax ? findBreakevenYear(trajectory) : breakeven;
 
   return {
     inputs: { ...inputs, amortization: safeAmort, years: safeYears },
@@ -292,11 +406,16 @@ export function simulate(inputs) {
     closingCostsBreakdown,
     cashAtClose: downPayment + closingCosts,
     trajectory,
+    exitTaxes,
     final: {
       buy: finalBuy,
       rent: finalRent,
       delta: finalBuy - finalRent,
+      buyAfterTax,
+      rentAfterTax,
+      deltaAfterTax: buyAfterTax - rentAfterTax,
       breakeven,
+      breakevenPreTax: useExitTax ? breakevenPreTax : null,
       totalInterestPaid: Math.round(totalInterestPaid),
       totalPrincipalPaid: Math.round(totalPrincipalPaid),
       totalRentPaid: Math.round(totalRentPaid),
@@ -350,7 +469,7 @@ function collectWarnings(inputs, rate, baseMortgage) {
   if (baseMortgage > 0 && (inputs.mortgageRate || 0) <= 0) {
     warnings.push({
       level: "info",
-      text: "Mortgage rate is 0% — payment is principal / amortization months.",
+      text: "Mortgage rate is 0%; payment is principal / amortization months.",
     });
   }
   return warnings;

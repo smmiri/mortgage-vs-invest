@@ -2,30 +2,25 @@ export default function Hero() {
   return (
     <section id="top" className="border-b border-slate-200 bg-gradient-to-b from-white to-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">Open-source · Made for Canadian mortgages</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-indigo-600">
+          Open-source · Built for Canadian mortgages
+        </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">
           Should you buy or rent &amp; invest?
         </h1>
-        <p className="mt-3 max-w-2xl text-base text-slate-600 sm:text-lg">
-          A transparent, month-by-month model. Compares the wealth of buying a home — and either selling or keeping
-          it — against renting the same property and investing the difference. CMHC, semi-annual compounding,
-          closing costs, and rent inflation are all built in.
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+          I kept asking the same question: what if I rented instead of buying, invested the same cash up front (down
+          payment plus closing costs), and kept topping up the portfolio whenever owning would have cost more? I built
+          this calculator to run that comparison year by year. Each month it updates the mortgage, rent, ownership
+          costs, and both portfolios, then shows who ends up ahead. CMHC, closing costs, rent inflation, and Canadian
+          mortgage math are all built in.
         </p>
-        <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-          <Badge>Canadian semi-annual compounding</Badge>
-          <Badge>Cash-to-close included</Badge>
-          <Badge>Optional sale costs</Badge>
-          <Badge>Editable assumptions</Badge>
-        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-500">
+          <span className="font-medium text-slate-700">What&apos;s in the model:</span> semi-annual mortgage rates,
+          province-level cash to close, optional sale costs at the end, and sliders for rent, growth, taxes, and the
+          rest so you can stress-test your own assumptions.
+        </p>
       </div>
     </section>
-  );
-}
-
-function Badge({ children }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-600">
-      {children}
-    </span>
   );
 }

@@ -14,12 +14,18 @@ const BUY_COLOR = "#2563eb"; // blue-600
 const RENT_COLOR = "#059669"; // emerald-600
 
 export default function WealthChart({ results }) {
-  const { trajectory, final } = results;
+  const { trajectory, final, inputs } = results;
+  const afterTax = inputs.modelExitTaxes !== false;
+
   const data = trajectory.map((p) => ({
     year: p.year,
-    buy: p.buyWealth,
-    rent: p.rentWealth,
+    buy: afterTax ? p.buyWealthAfterTax : p.buyWealth,
+    rent: afterTax ? p.rentWealthAfterTax : p.rentWealth,
+    buyPreTax: p.buyWealth,
+    rentPreTax: p.rentWealth,
   }));
+
+  const breakeven = final.breakeven;
 
   return (
     <figure
@@ -28,11 +34,21 @@ export default function WealthChart({ results }) {
     >
       <figcaption className="flex flex-col gap-1 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 className="text-base font-semibold text-slate-900">Wealth trajectory</h2>
+          <h2 className="text-base font-semibold text-slate-900">
+            Wealth trajectory{afterTax ? " (after tax)" : ""}
+          </h2>
           <p className="text-xs text-slate-500">
-            Both paths start with the same cash stake (the down payment). The buy line tracks the change in liquid
-            equity plus any monthly surplus invested. The rent line tracks the down payment compounded at the market
-            return plus monthly surplus.
+            {afterTax ? (
+              <>
+                Lines match the headline delta. Portfolio gains are taxed each year (non-registered assumption); home
+                sale tax applies at year {inputs.years} only when selling.
+              </>
+            ) : (
+              <>
+                Both paths start with the same cash stake. The buy line tracks liquid equity plus any monthly surplus
+                invested; the rent line tracks the market portfolio plus monthly top-ups.
+              </>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs text-slate-600">
@@ -68,18 +84,15 @@ export default function WealthChart({ results }) {
               tickLine={false}
               width={64}
             />
-            <Tooltip
-              cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }}
-              content={<ChartTooltip />}
-            />
-            {final.breakeven != null ? (
+            <Tooltip cursor={{ stroke: "#cbd5e1", strokeWidth: 1 }} content={<ChartTooltip afterTax={afterTax} />} />
+            {breakeven != null ? (
               <ReferenceLine
-                x={final.breakeven}
+                x={breakeven}
                 stroke="#94a3b8"
                 strokeDasharray="4 4"
                 label={{
                   position: "top",
-                  value: `Crossover · Y${final.breakeven}`,
+                  value: `Crossover · Y${breakeven}`,
                   fill: "#475569",
                   fontSize: 11,
                 }}
@@ -112,12 +125,16 @@ export default function WealthChart({ results }) {
   );
 }
 
-function ChartTooltip({ active, payload, label }) {
+function ChartTooltip({ active, payload, label, afterTax }) {
   if (!active || !payload?.length) return null;
+  const row = payload[0]?.payload;
   const buy = payload.find((p) => p.dataKey === "buy")?.value ?? 0;
   const rent = payload.find((p) => p.dataKey === "rent")?.value ?? 0;
   const delta = buy - rent;
   const isToday = label === 0;
+  const showPreTax =
+    afterTax && row && (row.buy !== row.buyPreTax || row.rent !== row.rentPreTax);
+
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-3 text-xs shadow-md">
       <div className="font-semibold text-slate-700">{isToday ? "Today" : `Year ${label}`}</div>
@@ -134,6 +151,11 @@ function ChartTooltip({ active, payload, label }) {
           {formatCurrency(Math.abs(delta))}
         </span>
       </div>
+      {showPreTax ? (
+        <p className="mt-2 border-t border-slate-100 pt-2 text-[10px] text-slate-500">
+          Pre-tax at exit: buy {formatCurrency(row.buyPreTax)}, rent {formatCurrency(row.rentPreTax)}
+        </p>
+      ) : null}
     </div>
   );
 }

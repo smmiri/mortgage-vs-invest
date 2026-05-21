@@ -39,6 +39,36 @@ The cheaper side invests the difference at the market return (never negative). W
 | Amortization | **25 or 30 years**; 30-year insured mortgages add **+0.20%** to the CMHC premium rate. |
 | Time horizon | User-chosen (1–40 years); independent of amortization length. |
 | Sale at exit | Optional % haircut on property value (realtor, legal, discharge). Off = paper equity only. |
+| Exit taxes (on by default) | **Annual** tax on portfolio gains (non-registered); **home sale tax at exit** only when selling, with full **principal residence exemption** by default. Chart and headline delta use after-tax wealth. |
+
+---
+
+## Exit taxes (simplified)
+
+When **Exit taxes** is enabled (default):
+
+**Portfolio (renter + buyer side portfolio), each year:**
+
+```text
+year_gain = max(0, end_value − start_value − contributions_that_year)
+tax = year_gain × inclusion rate × marginal rate
+```
+
+Tax is paid from the portfolio at year-end (assumes gains are realized annually in a taxable account).
+
+**Home (only if selling at exit):**
+
+```text
+gain = max(0, proceeds − purchase price)
+taxable gain = gain × (1 − PRE exempt fraction)
+tax = taxable gain × inclusion rate × marginal rate
+```
+
+Default **Principal residence** → no tax on the home. Partial / not exempt: as above.
+
+No TFSA/FHSA room is modeled.
+
+**If we added shelter room later:** inputs such as `tfsaRoomAvailable` / `fhsaRoomAvailable` could cap tax-free growth with `exemptGain = min(portfolioGain, room)` and tax only the remainder.
 
 ---
 
@@ -74,15 +104,15 @@ Minimum down payment follows the usual Canadian sliding scale (5% on the first $
 
 Closing costs are computed from **province**, **first-time buyer** status, and whether the home is **new construction**.
 
-**Land transfer tax (LTT / PTT)** — bracket schedules for BC, ON (+ optional Toronto MLTT), QC (+ optional Montréal surtax), MB, and flat or negligible rates elsewhere. Rebates/exemptions modeled where common:
+**Land transfer tax (LTT / PTT):** bracket schedules for BC, ON (+ optional Toronto MLTT), QC (+ optional Montréal surtax), MB, and flat or negligible rates elsewhere. Rebates/exemptions modeled where common:
 
 - BC first-time buyer exemption (full ≤ $835k, partial to $860k); newly built exemption (full ≤ $1.1M, partial to $1.15M).
 - Ontario $4,000 rebate; Toronto MLTT $4,475 rebate.
 - PEI full exemption for FTB on resale ≤ $200k.
 
-**GST / HST on new construction** — resale is exempt. New builds: federal GST 5% with standard new-housing rebate (CRA RC4028) and **2025 first-time buyer GST rebate** (full refund on homes ≤ $1M, phased to $1.5M). Provincial HST portion rebates where applicable (e.g. Ontario cap $24k on the provincial share).
+**GST / HST on new construction:** resale is exempt. New builds: federal GST 5% with standard new-housing rebate (CRA RC4028) and **2025 first-time buyer GST rebate** (full refund on homes ≤ $1M, phased to $1.5M). Provincial HST portion rebates where applicable (e.g. Ontario cap $24k on the provincial share).
 
-**Other cash at closing** — user-editable legal / title / inspection (default ~$2,500).
+**Other cash at closing:** user-editable legal / title / inspection (default ~$2,500).
 
 The renter is modeled as having invested **down payment + total closing costs** at year 0. The buyer’s chart line is rebased to **down payment only** at year 0, so the visible gap between the two lines at *t = 0* equals closing costs.
 
@@ -115,7 +145,7 @@ buy_wealth_m = down_payment + (liquid_m − liquid_0) + buyer_side_portfolio_m
 
 ## What is not modeled
 
-- Income taxes (marginal rates, TFSA / RRSP / FHSA, principal-residence capital gains exemption).
+- Annual tax drag on rent or dividends; RRSP/FHSA withdrawals; CRA +1 PRE year rule; change-in-use when renting the home.
 - Mortgage **refinancing** or **renewal** at a different rate mid-amortization.
 - Major one-off capital repairs beyond the monthly maintenance input.
 - Renter’s insurance, deposits, or moving costs.
@@ -127,16 +157,16 @@ Tax and closing-cost rules change with budgets and indexing; figures are **estim
 
 ## Using this repository
 
-- **Use the app** — open the [live calculator](https://smmiri.github.io/mortgage-vs-invest/) and adjust inputs; methodology and a worked example are in the app.
-- **Fork or clone** — MIT license. The model is dependency-free in `src/lib/`; import `simulate()` from `src/lib/model.js` in your own tooling or tests (`npm test` runs `node --test` on the lib tests).
-- **Issues and PRs** — welcome; keep changes to the model tested and document new inputs in `FIELD_META` and the in-app methodology section.
+- **Use the app:** open the [live calculator](https://smmiri.github.io/mortgage-vs-invest/) and adjust inputs; methodology and a worked example are in the app.
+- **Fork or clone:** MIT license. The model is dependency-free in `src/lib/`; import `simulate()` from `src/lib/model.js` in your own tooling or tests (`npm test` runs `node --test` on the lib tests).
+- **Issues and PRs:** welcome; keep changes to the model tested and document new inputs in `FIELD_META` and the in-app methodology section.
 
 ---
 
 ## Disclaimer
 
-**Not financial advice.** Simplified educational model — not a substitute for a mortgage broker, accountant, or lawyer. Treat outputs as **directional**; use as a **sensitivity tool**, not a recommendation to buy or rent.
+**Not financial advice.** Simplified educational model, not a substitute for a mortgage broker, accountant, or lawyer. Treat outputs as **directional**; use as a **sensitivity tool**, not a recommendation to buy or rent.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT. See [LICENSE](./LICENSE).

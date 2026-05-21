@@ -157,3 +157,37 @@ test("warnings flag down payment below the Canadian minimum", () => {
   const r = simulate({ ...DEFAULT_INPUTS, propertyPrice: 1_000_000, downPayment: 30_000 });
   assert.ok(r.warnings.some((w) => /below Canadian minimum/i.test(w.text)));
 });
+
+test("default exit taxes: full PRE zero home tax, taxable portfolio taxed", () => {
+  const r = simulate(DEFAULT_INPUTS);
+  assert.equal(r.exitTaxes.buyTax, 0);
+  assert.ok(r.exitTaxes.rentTax > 0);
+  assert.equal(r.final.deltaAfterTax, r.final.buyAfterTax - r.final.rentAfterTax);
+  assert.ok(r.exitTaxes.rentTax > 0);
+  assert.ok(r.final.rentAfterTax < r.final.rent, "annual portfolio tax reduces renter wealth vs pre-tax line");
+  assert.notEqual(r.final.deltaAfterTax, r.final.delta, "portfolio tax should move the headline delta");
+});
+
+test("annual portfolio tax reduces renter wealth each year when enabled", () => {
+  const r = simulate(DEFAULT_INPUTS);
+  for (let i = 1; i < r.trajectory.length; i++) {
+    assert.ok(
+      r.trajectory[i].rentWealthAfterTax <= r.trajectory[i].rentWealth,
+      `year ${r.trajectory[i].year}`,
+    );
+  }
+});
+
+test("turning off exit taxes restores pre-tax delta", () => {
+  const r = simulate({ ...DEFAULT_INPUTS, modelExitTaxes: false });
+  assert.equal(r.exitTaxes.rentTax, 0);
+  assert.equal(r.final.deltaAfterTax, r.final.delta);
+});
+
+test("after-tax chart points match headline delta at horizon", () => {
+  const r = simulate(DEFAULT_INPUTS);
+  const last = r.trajectory.at(-1);
+  assert.equal(last.buyWealthAfterTax - last.rentWealthAfterTax, r.final.deltaAfterTax);
+  assert.equal(last.buyWealthAfterTax, r.final.buyAfterTax);
+  assert.equal(last.rentWealthAfterTax, r.final.rentAfterTax);
+});

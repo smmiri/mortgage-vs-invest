@@ -174,14 +174,14 @@ export function computeLandTransferTax({
     if (firstTimeBuyer) {
       if (price <= 835_000) {
         provincialRebate = provincialGross;
-        lines.push("BC FTB Exemption — full");
+        lines.push("BC FTB Exemption (full)");
       } else if (price <= 860_000) {
         const fullAtThreshold = bracketedTax(835_000, LTT_BRACKETS.BC);
         provincialRebate = Math.max(
           0,
           (fullAtThreshold * (860_000 - price)) / 25_000,
         );
-        lines.push("BC FTB Exemption — partial phase-out");
+        lines.push("BC FTB Exemption (partial phase-out)");
       }
     }
     // Newly Built Home exemption (residential) — full <= $1.1M, partial to $1.15M.
@@ -202,7 +202,7 @@ export function computeLandTransferTax({
   } else if (province === "ON") {
     if (firstTimeBuyer) {
       provincialRebate = Math.min(provincialGross, 4_000);
-      lines.push("ON FTB Refund — up to $4,000");
+      lines.push("ON FTB Refund (up to $4,000)");
     }
   } else if (province === "QC") {
     // Montreal welcome tax is a city-only surtax. We approximate by treating
@@ -218,7 +218,7 @@ export function computeLandTransferTax({
   } else if (province === "PE") {
     if (firstTimeBuyer && price <= 200_000) {
       provincialRebate = provincialGross;
-      lines.push("PEI Real Property Transfer Tax — FTB exemption");
+      lines.push("PEI Real Property Transfer Tax (FTB exemption)");
     }
   }
 
@@ -229,7 +229,7 @@ export function computeLandTransferTax({
     municipalGross = bracketedTax(price, LTT_BRACKETS.TORONTO_MLTT);
     if (firstTimeBuyer) {
       municipalRebate = Math.min(municipalGross, 4_475);
-      lines.push("Toronto MLTT FTB Refund — up to $4,475");
+      lines.push("Toronto MLTT FTB Refund (up to $4,475)");
     } else {
       lines.push("Toronto Municipal Land Transfer Tax");
     }

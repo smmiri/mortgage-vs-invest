@@ -16,29 +16,29 @@ const compactFormatter = new Intl.NumberFormat("en-CA", {
 });
 
 export function formatCurrency(n) {
-  if (!Number.isFinite(n)) return "—";
+  if (!Number.isFinite(n)) return "n/a";
   return currencyFormatter.format(Math.round(n));
 }
 
 export function formatCurrencyDecimal(n) {
-  if (!Number.isFinite(n)) return "—";
+  if (!Number.isFinite(n)) return "n/a";
   return currencyDecimalFormatter.format(n);
 }
 
 export function formatCompactCurrency(n) {
-  if (!Number.isFinite(n)) return "—";
+  if (!Number.isFinite(n)) return "n/a";
   const sign = n < 0 ? "-" : "";
   return `${sign}$${compactFormatter.format(Math.abs(n))}`;
 }
 
 export function formatSignedCurrency(n) {
-  if (!Number.isFinite(n)) return "—";
+  if (!Number.isFinite(n)) return "n/a";
   const abs = Math.abs(Math.round(n));
   const sign = n >= 0 ? "+" : "−";
   return `${sign}${currencyFormatter.format(abs).replace(/^[-]?/, "")}`;
 }
 
 export function formatPercent(value, digits = 1) {
-  if (!Number.isFinite(value)) return "—";
+  if (!Number.isFinite(value)) return "n/a";
   return `${(value * 100).toFixed(digits)}%`;
 }

@@ -6,7 +6,8 @@ export default function Footer({ repoUrl }) {
           <p className="max-w-2xl leading-relaxed">
             <strong className="font-semibold text-slate-700">Not financial advice.</strong> Simplified month-by-month
             model for Canadian buyers: includes CMHC insurance, province-aware land transfer tax, GST/HST on new
-            builds, and optional sale costs. Excludes income taxes, refinancing/renewal risk, large one-off repairs,
+            builds, optional sale costs, and simplified exit capital gains (PRE on home; taxable portfolio).
+            Excludes annual tax drag, TFSA/FHSA room, RRSP, refinancing/renewal risk, large one-off repairs,
             and moving or renter&apos;s insurance. Assumes constant growth rates. Use as a sensitivity tool, not a
             recommendation.
           </p>

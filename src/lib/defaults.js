@@ -15,6 +15,13 @@ export const DEFAULT_INPUTS = {
   applySaleCost: true,
   saleCostPct: 5,
 
+  // Exit taxes (simplified Canadian capital gains at horizon).
+  modelExitTaxes: true,
+  preExemption: "full", // "full" | "partial" | "none"
+  yearsAsPrincipalResidence: 10,
+  marginalTaxRate: 40,
+  capitalGainsInclusionRate: 50,
+
   // Cash-to-close (province-aware, computed in auto mode).
   closingCostsMode: "auto", // "auto" | "manual"
   province: "ON",
@@ -158,6 +165,36 @@ export const FIELD_META = {
     min: 0,
     max: 10,
     help: "Realtor commission, legal fees, and discharge cost as a percentage of sale price. In Canada this is typically 4–6%.",
+    group: "horizon",
+  },
+  marginalTaxRate: {
+    kind: "slider",
+    label: "Marginal tax rate",
+    suffix: "%",
+    step: 1,
+    min: 0,
+    max: 55,
+    help: "Combined federal + provincial rate applied to taxable capital gains at exit. Used for both the home sale (if not fully exempt) and the renter's taxable portfolio gain.",
+    group: "horizon",
+  },
+  capitalGainsInclusionRate: {
+    kind: "slider",
+    label: "Capital gains inclusion",
+    suffix: "%",
+    step: 1,
+    min: 0,
+    max: 100,
+    help: "Share of the capital gain included in income (50% for individuals under current rules). Tax = taxable gain × inclusion rate × marginal rate.",
+    group: "horizon",
+  },
+  yearsAsPrincipalResidence: {
+    kind: "number",
+    label: "Years as principal residence",
+    suffix: "yrs",
+    step: 1,
+    min: 0,
+    max: 40,
+    help: "Only used when PRE is Partial. Fraction of the gain exempt ≈ this ÷ years owned. Simplified; does not include CRA's +1 year rule.",
     group: "horizon",
   },
 };

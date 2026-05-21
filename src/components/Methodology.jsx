@@ -19,7 +19,7 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
       <h2 className="text-lg font-semibold text-slate-900">How the math works</h2>
       <p className="mt-2 text-sm leading-relaxed text-slate-600">
         Everything runs in your browser; inputs never leave your device. Each month both paths share the same housing
-        budget, <Code>max(owning_cost, rent)</Code> — the cheaper side invests the difference. When owning costs more
+        budget, <Code>max(owning_cost, rent)</Code>, and the cheaper side invests the difference. When owning costs more
         (typical early years), the renter&apos;s monthly top-up is that gap, funded from the same implicit budget as
         the buyer&apos;s payment.
       </p>
@@ -34,7 +34,7 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
       </p>
 
       <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
-        <h3 className="text-base font-semibold text-slate-900">Worked example — default scenario</h3>
+        <h3 className="text-base font-semibold text-slate-900">Worked example (default scenario)</h3>
         <p className="mt-1 text-sm text-slate-600">
           Default inputs walked through step by step. Change sliders above to see your own numbers in the chart.
         </p>
