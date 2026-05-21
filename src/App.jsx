@@ -20,7 +20,7 @@ export default function App() {
         <Hero />
         <Calculator />
         <section id="methodology" className="mx-auto max-w-6xl px-4 pb-12 sm:px-6" aria-label="Methodology">
-          <Methodology />
+          <Methodology repoUrl={REPO_URL} />
         </section>
       </main>
       <Footer repoUrl={REPO_URL} />
