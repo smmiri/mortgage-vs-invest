@@ -45,13 +45,13 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
       {on ? (
         <div className={isWide ? "space-y-4 p-4 sm:p-5" : "mt-3 space-y-3"}>
           <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-            <Trans i18nKey="exitTax.taxableBanner" components={{ strong: <strong className="font-semibold" /> }} />
+            <Trans ns="common" i18nKey="exitTax.taxableBanner" components={{ strong: <strong className="font-semibold" /> }} />
           </p>
           <div className={isWide ? "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start" : "space-y-3"}>
             <div className={isWide ? "lg:col-span-4" : ""}>
               <div className="mb-1.5 flex items-center gap-1.5">
-                <span className="text-xs font-medium text-body">{t("exitTax.pre.full")}</span>
-                <InfoTip text={t("exitTax.tip")} />
+                <span className="text-xs font-medium text-body">{t("exitTax.preLabel")}</span>
+                <InfoTip text={t("exitTax.preTip")} />
               </div>
               <div
                 role="radiogroup"
@@ -112,6 +112,7 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
 
           <p className="rounded-lg border border-default bg-surface-card px-3 py-2 text-[11px] leading-relaxed text-body">
             <Trans
+              ns="common"
               i18nKey="exitTax.summary"
               values={{
                 rentTax: fmt.formatCurrency(exitTaxes.rentTax),

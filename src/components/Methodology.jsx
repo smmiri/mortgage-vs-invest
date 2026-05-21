@@ -24,6 +24,7 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
       <p className="mt-2 text-sm leading-relaxed text-body">{t("methodology.p1")}</p>
       <p className="mt-2 text-sm leading-relaxed text-body">
         <Trans
+          ns="common"
           i18nKey="methodology.p2"
           values={{ rulesDate: RULES_AS_OF }}
           components={{
@@ -54,6 +55,7 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
           </Step>
           <Step n={3} title={t("methodology.step3Title")}>
             <Trans
+              ns="common"
               i18nKey="methodology.step3"
               values={{
                 rate: fmt.formatPercent(example.monthlyRate, 4),
@@ -84,6 +86,7 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
         </ol>
         <p className="mt-4 text-xs text-muted">
           <Trans
+            ns="common"
             i18nKey="methodology.realtor"
             components={{
               link: (

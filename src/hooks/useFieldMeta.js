@@ -4,7 +4,7 @@ import { FIELD_META } from "../lib/defaults.js";
 
 /** FIELD_META with translated label and help for the active locale. */
 export function useFieldMeta() {
-  const { t } = useTranslation("fields");
+  const { t, i18n } = useTranslation("fields");
 
   return useMemo(() => {
     const out = {};
@@ -12,9 +12,9 @@ export function useFieldMeta() {
       out[name] = {
         ...meta,
         label: t(`${name}.label`, { defaultValue: meta.label }),
-        help: meta.helpKey ? t(`${name}.help`, { defaultValue: meta.help }) : meta.help,
+        help: t(`${name}.help`, { defaultValue: meta.help }),
       };
     }
     return out;
-  }, [t]);
+  }, [t, i18n.language]);
 }

@@ -128,6 +128,8 @@
     "tip": "Canadian capital gains: portfolio gains taxed each year (non-registered; no TFSA/FHSA room). Home sale taxed at the horizon only when selling; full principal residence exemption by default.",
     "caption": "Annual tax on portfolio growth; home tax at exit when selling.",
     "aria": "Estimate exit taxes",
+    "preLabel": "Principal residence",
+    "preTip": "Full PRE: no tax on home sale gain. Partial: exempt fraction ≈ years as PR ÷ years owned. Not exempt: investment/rental property.",
     "taxableBanner": "<strong>Taxable portfolio assumption.</strong> Portfolio gains are taxed each year as if held in a non-registered account. TFSA, FHSA, and RRSP sheltering are not modeled. Turn exit taxes off, or lower the marginal rate, to approximate tax-sheltered investing.",
     "pre": {
       "full": "Principal residence",

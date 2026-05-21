@@ -10,9 +10,8 @@
     "Vazirmatn", "Inter", ui-sans-serif, system-ui, Tahoma, sans-serif;
 }
 
-html[lang="fa"],
-html[dir="rtl"] {
-  font-family: var(--font-fa);
+html[lang="fa"] {
+  --font-sans: var(--font-fa);
 }
 
 html[dir="rtl"] input[type="range"] {

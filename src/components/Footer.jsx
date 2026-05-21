@@ -1,6 +1,8 @@
 import { Trans, useTranslation } from "react-i18next";
 import { RULES_AS_OF } from "../lib/site-meta.js";
 
+const codeClass = "rounded bg-slate-100 px-1 dark:bg-slate-800";
+
 export default function Footer({ repoUrl }) {
   const { t } = useTranslation("legal");
 
@@ -8,10 +10,14 @@ export default function Footer({ repoUrl }) {
     <footer className="border-t border-default bg-surface-card">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 text-xs text-muted sm:px-6">
         <p className="max-w-3xl leading-relaxed">
-          <Trans i18nKey="disclaimer" components={{ strong: <strong className="font-semibold text-label" /> }} />
+          <Trans
+            ns="legal"
+            i18nKey="disclaimer"
+            components={{ strong: <strong className="font-semibold text-label" /> }}
+          />
         </p>
 
-        <nav aria-label={t("navLegal")} className="flex flex-wrap gap-x-4 gap-y-1 text-label">
+        <nav aria-label={t("navLegal")} className="flex flex-wrap items-center gap-x-4 gap-y-1 text-label">
           <a href="#privacy" className="hover:text-heading">
             {t("privacy")}
           </a>
@@ -31,10 +37,11 @@ export default function Footer({ repoUrl }) {
           <h2 className="text-sm font-semibold text-heading">{t("privacyTitle")}</h2>
           <p>
             <Trans
+              ns="legal"
               i18nKey="privacyP1"
               components={{
                 strong: <strong />,
-                code: <code className="rounded bg-slate-100 px-1 dark:bg-slate-800" />,
+                code: <code className={codeClass} />,
               }}
             />
           </p>
@@ -45,6 +52,7 @@ export default function Footer({ repoUrl }) {
           <h2 className="text-sm font-semibold text-heading">{t("termsTitle")}</h2>
           <p>
             <Trans
+              ns="legal"
               i18nKey="termsP1"
               values={{ rulesDate: RULES_AS_OF }}
               components={{ strong: <strong className="font-medium text-label" /> }}
@@ -55,9 +63,10 @@ export default function Footer({ repoUrl }) {
 
         <p className="text-[11px] text-caption">
           <Trans
+            ns="legal"
             i18nKey="footerMeta"
             values={{ rulesDate: RULES_AS_OF }}
-            components={{ code: <code className="rounded bg-slate-100 px-1 dark:bg-slate-800" /> }}
+            components={{ code: <code className={codeClass} /> }}
           />
         </p>
       </div>
