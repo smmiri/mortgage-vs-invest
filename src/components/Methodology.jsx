@@ -15,30 +15,30 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
   const readmeUrl = `${repoUrl.replace(/\/$/, "")}/${README_PATH}`;
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-      <h2 className="text-lg font-semibold text-slate-900">How the math works</h2>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+    <section className="rounded-2xl border border-default bg-surface-card p-6 shadow-sm sm:p-8">
+      <h2 className="text-lg font-semibold text-heading">How the math works</h2>
+      <p className="mt-2 text-sm leading-relaxed text-body">
         Everything runs in your browser; inputs never leave your device. Each month both paths share the same housing
         budget, <Code>max(owning_cost, rent)</Code>, and the cheaper side invests the difference. When owning costs more
         (typical early years), the renter&apos;s monthly top-up is that gap, funded from the same implicit budget as
         the buyer&apos;s payment.
       </p>
-      <p className="mt-2 text-sm leading-relaxed text-slate-600">
+      <p className="mt-2 text-sm leading-relaxed text-body">
         At year 0 the buy line shows only the down payment; the renter&apos;s line includes down payment plus closing
         costs, so the gap between curves equals cash-to-close. The chart marks the crossover year when net wealth
         flips. Formulas, CMHC tiers, provincial taxes, and exclusions are documented in the{" "}
-        <a className="font-medium text-indigo-600 hover:underline" href={readmeUrl} target="_blank" rel="noreferrer noopener">
+        <a className="font-medium link-accent" href={readmeUrl} target="_blank" rel="noreferrer noopener">
           README on GitHub
         </a>
         .
       </p>
 
-      <div className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6">
-        <h3 className="text-base font-semibold text-slate-900">Worked example (default scenario)</h3>
-        <p className="mt-1 text-sm text-slate-600">
+      <div className="mt-8 rounded-2xl border border-default bg-surface-inset p-5 sm:p-6">
+        <h3 className="text-base font-semibold text-heading">Worked example (default scenario)</h3>
+        <p className="mt-1 text-sm text-body">
           Default inputs walked through step by step. Change sliders above to see your own numbers in the chart.
         </p>
-        <ol className="mt-4 space-y-3 text-sm text-slate-700">
+        <ol className="mt-4 space-y-3 text-sm text-label">
           <Step n={1} title="CMHC tier">
             Down payment {formatPercent(example.dpPct, 1)} → premium rate{" "}
             <strong>{formatPercent(example.cmhcRate, 2)}</strong> → CMHC{" "}
@@ -65,9 +65,9 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
             /mo at market return.
           </Step>
         </ol>
-        <p className="mt-4 text-xs text-slate-500">
+        <p className="mt-4 text-xs text-muted">
           P&amp;I should match{" "}
-          <a className="text-indigo-600 hover:underline" href="https://www.realtor.ca/calculator" target="_blank" rel="noreferrer noopener">
+          <a className="link-accent" href="https://www.realtor.ca/calculator" target="_blank" rel="noreferrer noopener">
             realtor.ca
           </a>{" "}
           for the same price, down payment, rate, and amortization; we report P&amp;I separately from property tax and
@@ -109,7 +109,7 @@ function buildWorkedExample(inputs) {
 
 function Code({ children }) {
   return (
-    <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[12px] text-slate-700">{children}</code>
+    <code className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[12px] text-label dark:bg-slate-800">{children}</code>
   );
 }
 
@@ -118,12 +118,12 @@ function Step({ n, title, children }) {
     <li className="flex gap-3">
       <span
         aria-hidden="true"
-        className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700"
+        className="mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-xs font-semibold text-indigo-700 dark:bg-indigo-950 dark:text-indigo-300"
       >
         {n}
       </span>
       <div className="space-y-0.5 leading-relaxed">
-        <div className="font-semibold text-slate-900">{title}</div>
+        <div className="font-semibold text-heading">{title}</div>
         <div>{children}</div>
       </div>
     </li>

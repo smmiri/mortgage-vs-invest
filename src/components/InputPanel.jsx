@@ -50,10 +50,10 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
     <div aria-label="Model inputs">
       <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold text-slate-900">Assumptions</h2>
-          <p className="mt-0.5 text-sm text-slate-500">
+          <h2 className="text-lg font-semibold text-heading">Assumptions</h2>
+          <p className="mt-0.5 text-sm text-muted">
             Drag sliders or type values. Your assumptions are saved in this browser automatically. Hover{" "}
-            <span className="inline-flex h-3.5 w-3.5 translate-y-px items-center justify-center rounded-full border border-slate-300 text-[8px] text-slate-500">
+            <span className="inline-flex h-3.5 w-3.5 translate-y-px items-center justify-center rounded-full border border-default text-[8px] text-muted">
               i
             </span>{" "}
             for help on each field.
@@ -63,7 +63,7 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
           <button
             type="button"
             onClick={onReset}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm hover:border-slate-300 hover:text-slate-900"
+            className="btn-ghost"
           >
             Reset to defaults
           </button>
@@ -88,7 +88,7 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
             label="Est. closing costs"
             value={formatCurrency(closingCosts)}
             detail={
-              <a href="#cash-to-close" className="text-indigo-600 hover:underline">
+              <a href="#cash-to-close" className="link-accent">
                 Edit in cash to close ↓
               </a>
             }
@@ -121,11 +121,11 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
 
         <InputColumn title="Horizon & exit">
           {renderField("years", inputs.years, FIELD_META.years, handleField)}
-          <div className="space-y-3 rounded-lg border border-slate-100 bg-slate-50/80 p-3">
+          <div className="space-y-3 rounded-lg border border-subtle bg-surface-muted p-3">
             <div className="flex items-center justify-between gap-2">
               <div className="min-w-0 flex-1">
-                <h4 className="text-sm font-medium text-slate-900">Sale costs at exit</h4>
-                <p className="mt-0.5 text-[11px] leading-snug text-slate-500">
+                <h4 className="text-sm font-medium text-heading">Sale costs at exit</h4>
+                <p className="mt-0.5 text-[11px] leading-snug text-muted">
                   On if you sell at the horizon; off to keep paper equity.
                 </p>
               </div>
@@ -178,9 +178,9 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
 
 function InputColumn({ title, children }) {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
-      <header className="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-4 py-3">
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-600">{title}</h3>
+    <section className="flex h-full flex-col rounded-2xl border border-default bg-surface-card shadow-sm">
+      <header className="panel-header px-4 py-3">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{title}</h3>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>
     </section>
@@ -189,10 +189,10 @@ function InputColumn({ title, children }) {
 
 function ColumnHint({ label, value, detail }) {
   return (
-    <div className="mt-auto rounded-lg border border-dashed border-slate-200 bg-slate-50/80 px-3 py-2.5">
-      <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold tabular-nums text-slate-800">{value}</div>
-      {detail ? <div className="mt-1 text-[11px] text-slate-500">{detail}</div> : null}
+    <div className="mt-auto rounded-lg border border-dashed border-default bg-surface-muted px-3 py-2.5">
+      <div className="text-[11px] font-medium uppercase tracking-wide text-caption">{label}</div>
+      <div className="mt-0.5 text-sm font-semibold tabular-nums text-heading">{value}</div>
+      {detail ? <div className="mt-1 text-[11px] text-muted">{detail}</div> : null}
     </div>
   );
 }

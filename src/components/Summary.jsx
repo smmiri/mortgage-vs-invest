@@ -71,7 +71,7 @@ export function PathTotals({ results }) {
   const { final, inputs } = results;
   const horizon = inputs.years;
   return (
-    <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs text-slate-500">
+    <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs text-muted">
       <Totals label="Total rent paid" value={formatCompactCurrency(final.totalRentPaid)} sub={`over ${horizon} yrs`} />
       <Totals label="Total ownership cost" value={formatCompactCurrency(final.totalOwningCost)} sub={`over ${horizon} yrs`} />
       <Totals label="Interest paid" value={formatCompactCurrency(final.totalInterestPaid)} sub="on the mortgage" />
@@ -82,10 +82,10 @@ export function PathTotals({ results }) {
 
 function Totals({ label, value, sub }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2">
-      <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold tabular-nums text-slate-700">{value}</div>
-      <div className="text-[11px] text-slate-400">{sub}</div>
+    <div className="rounded-lg border border-default bg-surface-card px-3 py-2">
+      <div className="text-[11px] font-semibold uppercase tracking-wide text-caption">{label}</div>
+      <div className="mt-0.5 text-sm font-semibold tabular-nums text-label">{value}</div>
+      <div className="text-[11px] text-caption">{sub}</div>
     </div>
   );
 }

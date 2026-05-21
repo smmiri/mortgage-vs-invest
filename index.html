@@ -4,7 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0f172a" />
-    <meta name="color-scheme" content="light" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        var k = "rvb_theme";
+        var s = localStorage.getItem(k);
+        var dark =
+          s === "dark" || (s !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+        var r = document.documentElement;
+        if (dark) r.classList.add("dark");
+        else r.classList.remove("dark");
+        r.dataset.theme = s === "light" || s === "dark" ? s : "system";
+      })();
+    </script>
 
     <title>Rent or Buy? Canadian Buy vs Rent Calculator · CMHC &amp; Closing Costs</title>
     <meta

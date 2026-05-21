@@ -26,12 +26,12 @@ export default function DownPaymentSlider({ propertyPrice, downPayment, meta, on
     <div>
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <label htmlFor={id} className="text-sm font-medium text-slate-700">
+          <label htmlFor={id} className="text-sm font-medium text-label">
             {meta.label}
           </label>
           {meta.help ? <InfoTip text={meta.help} /> : null}
         </div>
-        <div className="flex items-center rounded-md border border-slate-200 bg-white text-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100">
+        <div className="flex items-center rounded-md border input-shell text-sm">
           <input
             type="number"
             value={Number.isFinite(pct) ? Number(pct.toFixed(2)) : ""}
@@ -44,9 +44,9 @@ export default function DownPaymentSlider({ propertyPrice, downPayment, meta, on
             max={max}
             inputMode="decimal"
             aria-label={`${meta.label} percent`}
-            className="w-16 bg-transparent py-1 pl-2 text-right tabular-nums text-slate-900 focus:outline-none"
+            className="w-16 bg-transparent py-1 pl-2 text-right tabular-nums text-heading focus:outline-none"
           />
-          <span className="pr-2 text-xs font-medium text-slate-400">%</span>
+          <span className="pr-2 text-xs font-medium text-caption">%</span>
         </div>
       </div>
       <input
@@ -63,7 +63,7 @@ export default function DownPaymentSlider({ propertyPrice, downPayment, meta, on
         aria-valuenow={pct}
         aria-valuetext={`${pct}% (${formatCurrency(downPayment)})`}
       />
-      <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-400">
+      <div className="mt-1 flex justify-between text-[10px] tabular-nums text-caption">
         <span>
           {min}%
         </span>
@@ -71,11 +71,11 @@ export default function DownPaymentSlider({ propertyPrice, downPayment, meta, on
           {max}%
         </span>
       </div>
-      <p className="mt-1.5 text-xs tabular-nums text-slate-600">
-        <span className="font-medium text-slate-900">{formatCurrency(downPayment)}</span>
-        <span className="text-slate-500"> cash at closing</span>
+      <p className="mt-1.5 text-xs tabular-nums text-body">
+        <span className="font-medium text-heading">{formatCurrency(downPayment)}</span>
+        <span className="text-muted"> cash at closing</span>
         {price > 0 ? (
-          <span className="text-slate-500">
+          <span className="text-muted">
             {" "}
             · {formatCurrency(price - downPayment)} financed
           </span>

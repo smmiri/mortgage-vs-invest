@@ -8,7 +8,7 @@ const REPO_URL = import.meta.env.VITE_REPO_URL ?? "https://github.com/smmiri/mor
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <div className="min-h-screen surface-page antialiased">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-slate-900 focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-white"

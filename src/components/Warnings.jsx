@@ -1,7 +1,7 @@
 const TONE = {
-  error: "border-rose-200 bg-rose-50 text-rose-900",
-  warn: "border-amber-200 bg-amber-50 text-amber-900",
-  info: "border-slate-200 bg-slate-50 text-slate-700",
+  error: "border-rose-200 bg-rose-50 text-rose-900 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-200",
+  warn: "border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-200",
+  info: "border-default bg-surface-inset text-label",
 };
 
 export default function Warnings({ items }) {

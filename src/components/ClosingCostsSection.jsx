@@ -27,19 +27,19 @@ export default function ClosingCostsSection({
   return (
     <section
       id={id}
-      className="rounded-2xl border border-slate-200 bg-slate-50/80 shadow-sm"
+      className="rounded-2xl border border-default bg-surface-muted shadow-sm"
     >
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-200/80 bg-white px-4 py-3 sm:px-5">
+      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-default bg-surface-card px-4 py-3 sm:px-5">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">Cash to close</h3>
-          <p className="mt-0.5 text-xs text-slate-500">
+          <h3 className="text-sm font-semibold text-heading">Cash to close</h3>
+          <p className="mt-0.5 text-xs text-muted">
             Province, buyer status, and new-build flags drive LTT, GST/HST, and PST on CMHC.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="text-right">
-            <div className="text-[11px] font-medium uppercase tracking-wide text-slate-400">Total</div>
-            <div className="text-lg font-semibold tabular-nums text-slate-900">{formatCurrency(total)}</div>
+            <div className="text-[11px] font-medium uppercase tracking-wide text-caption">Total</div>
+            <div className="text-lg font-semibold tabular-nums text-heading">{formatCurrency(total)}</div>
           </div>
           <ModeToggle value={inputs.closingCostsMode} onChange={(v) => update({ closingCostsMode: v })} />
         </div>
@@ -64,7 +64,7 @@ export default function ClosingCostsSection({
             >
               <div>
                 <div className="mb-1.5 flex items-center gap-1.5">
-                  <label htmlFor="province-select" className="text-sm font-medium text-slate-700">
+                  <label htmlFor="province-select" className="text-sm font-medium text-label">
                     Province
                   </label>
                   <InfoTip text="Drives land transfer tax brackets, GST/HST or QST handling, and provincial new-housing rebates." />
@@ -73,7 +73,7 @@ export default function ClosingCostsSection({
                   id="province-select"
                   value={inputs.province}
                   onChange={(e) => update({ province: e.target.value })}
-                  className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                  className="select-field"
                 >
                   {PROVINCE_CODES.map((code) => (
                     <option key={code} value={code}>
@@ -123,15 +123,15 @@ export default function ClosingCostsSection({
             />
 
             {hasBreakdown ? (
-              <div className="rounded-lg border border-slate-200 bg-white">
+              <div className="rounded-lg border border-default bg-surface-card">
                 <button
                   type="button"
                   onClick={() => setBreakdownOpen((o) => !o)}
                   aria-expanded={breakdownOpen}
-                  className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-800 hover:bg-slate-50"
+                  className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-medium text-heading hover:bg-surface-inset"
                 >
                   <span>Line-item breakdown</span>
-                  <span className="text-xs font-medium text-indigo-600">{breakdownOpen ? "Hide" : "Show"}</span>
+                  <span className="text-xs font-medium link-accent">{breakdownOpen ? "Hide" : "Show"}</span>
                 </button>
                 {breakdownOpen ? <Breakdown results={results} /> : null}
               </div>
@@ -145,7 +145,7 @@ export default function ClosingCostsSection({
 
 function ModeToggle({ value, onChange }) {
   return (
-    <div role="tablist" className="inline-flex shrink-0 rounded-md border border-slate-200 bg-white p-0.5 text-xs">
+    <div role="tablist" className="inline-flex shrink-0 rounded-md border border-default bg-surface-card p-0.5 text-xs">
       {[
         ["auto", "Auto"],
         ["manual", "Manual"],
@@ -157,7 +157,7 @@ function ModeToggle({ value, onChange }) {
           aria-selected={value === v}
           onClick={() => onChange(v)}
           className={`rounded px-2 py-1 transition-colors ${
-            value === v ? "bg-indigo-600 text-white" : "text-slate-600 hover:bg-slate-50"
+            value === v ? "bg-indigo-600 text-white" : "tab-inactive"
           }`}
         >
           {label}
@@ -170,9 +170,9 @@ function ModeToggle({ value, onChange }) {
 function ToggleRow({ checked, onChange, label, help }) {
   const id = `toggle-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
-    <div className="flex items-center justify-between gap-3 rounded-md border border-slate-200 bg-white px-3 py-2.5">
+    <div className="flex items-center justify-between gap-3 rounded-md border border-default bg-surface-card px-3 py-2.5">
       <div className="flex min-w-0 flex-1 items-start gap-1.5">
-        <label htmlFor={id} className="text-sm leading-snug text-slate-700">
+        <label htmlFor={id} className="text-sm leading-snug text-label">
           {label}
         </label>
         {help ? <InfoTip text={help} /> : null}
@@ -186,24 +186,24 @@ function Breakdown({ results }) {
   const breakdown = results?.closingCostsBreakdown?.breakdown || [];
   const total = results?.closingCosts || 0;
   return (
-    <div className="border-t border-slate-100 px-4 pb-4">
-      <ul className="divide-y divide-slate-100 text-sm">
+    <div className="border-t border-subtle px-4 pb-4">
+      <ul className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
         {breakdown.map((line, i) => (
           <li key={i} className="flex items-start justify-between gap-3 py-1.5">
             <div>
-              <div className="text-slate-700">{line.label}</div>
-              {line.sublabel ? <div className="text-xs text-slate-500">{line.sublabel}</div> : null}
+              <div className="text-label">{line.label}</div>
+              {line.sublabel ? <div className="text-xs text-muted">{line.sublabel}</div> : null}
               {line.detail ? <DetailLines detail={line.detail} /> : null}
             </div>
-            <div className="shrink-0 tabular-nums text-slate-900">{formatCurrency(line.amount)}</div>
+            <div className="shrink-0 tabular-nums text-heading">{formatCurrency(line.amount)}</div>
           </li>
         ))}
       </ul>
-      <div className="mt-2 flex items-center justify-between border-t border-slate-200 pt-2 text-sm font-semibold">
-        <span className="text-slate-900">Total closing costs</span>
-        <span className="tabular-nums text-slate-900">{formatCurrency(total)}</span>
+      <div className="mt-2 flex items-center justify-between border-t border-default pt-2 text-sm font-semibold">
+        <span className="text-heading">Total closing costs</span>
+        <span className="tabular-nums text-heading">{formatCurrency(total)}</span>
       </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-slate-500">
+      <p className="mt-2 text-[11px] leading-relaxed text-muted">
         Model estimate. Confirm eligibility and amounts with a lawyer before signing.
       </p>
     </div>
@@ -230,7 +230,7 @@ function DetailLines({ detail }) {
   }
   if (!rows.length) return null;
   return (
-    <ul className="mt-1 space-y-0.5 text-[11px] tabular-nums text-slate-500">
+    <ul className="mt-1 space-y-0.5 text-[11px] tabular-nums text-muted">
       {rows.map(([label, amount], i) => (
         <li key={i} className="flex justify-between gap-2">
           <span>{label}</span>

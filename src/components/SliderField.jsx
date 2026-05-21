@@ -12,12 +12,12 @@ export default function SliderField({ name, value, meta, onChange }) {
     <div>
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          <label htmlFor={id} className="text-sm font-medium text-slate-700">
+          <label htmlFor={id} className="text-sm font-medium text-label">
             {meta.label}
           </label>
           {meta.help ? <InfoTip text={meta.help} /> : null}
         </div>
-        <div className="flex items-center rounded-md border border-slate-200 bg-white text-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100">
+        <div className="flex items-center rounded-md border input-shell text-sm">
           <input
             type="number"
             value={Number.isFinite(value) ? value : ""}
@@ -30,10 +30,10 @@ export default function SliderField({ name, value, meta, onChange }) {
             max={max}
             inputMode="decimal"
             aria-label={`${meta.label} precise value`}
-            className="w-16 bg-transparent py-1 pl-2 text-right tabular-nums text-slate-900 focus:outline-none"
+            className="w-16 bg-transparent py-1 pl-2 text-right tabular-nums text-heading focus:outline-none"
           />
           {meta.suffix ? (
-            <span className="pr-2 text-xs font-medium text-slate-400">{meta.suffix}</span>
+            <span className="pr-2 text-xs font-medium text-caption">{meta.suffix}</span>
           ) : null}
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function SliderField({ name, value, meta, onChange }) {
         aria-valuenow={Number.isFinite(value) ? value : min}
         aria-valuetext={`${value}${meta.suffix ?? ""}`}
       />
-      <div className="mt-1 flex justify-between text-[10px] tabular-nums text-slate-400">
+      <div className="mt-1 flex justify-between text-[10px] tabular-nums text-caption">
         <span>
           {min}
           {meta.suffix}

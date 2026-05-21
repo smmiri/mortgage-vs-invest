@@ -11,8 +11,8 @@ export default function Switch({ checked, onChange, id, "aria-label": ariaLabel 
       aria-checked={checked}
       aria-label={ariaLabel}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-        checked ? "bg-indigo-600" : "bg-slate-300"
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer overflow-hidden rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900 ${
+        checked ? "bg-indigo-600" : "bg-slate-300 dark:bg-slate-600"
       }`}
     >
       <span

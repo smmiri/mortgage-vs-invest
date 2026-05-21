@@ -18,22 +18,22 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
   const isWide = layout === "fullWidth";
 
   const shell = isWide
-    ? "rounded-2xl border border-slate-200 bg-slate-50/80 shadow-sm"
-    : "space-y-3 rounded-lg border border-slate-100 bg-slate-50/80 p-3";
+    ? "rounded-2xl border border-default bg-surface-muted shadow-sm"
+    : "space-y-3 rounded-lg border border-subtle bg-surface-muted p-3";
 
   return (
     <section id="exit-taxes" className={shell}>
       <header
-        className={`flex flex-wrap items-start justify-between gap-3 border-b border-slate-200/80 bg-white ${
+        className={`flex flex-wrap items-start justify-between gap-3 border-b border-default bg-surface-card ${
           isWide ? "px-4 py-3 sm:px-5" : "border-0 bg-transparent p-0 pb-0"
         }`}
       >
         <div>
           <div className="flex items-center gap-1.5">
-            <h3 className="text-sm font-semibold text-slate-900">Exit taxes (simplified)</h3>
+            <h3 className="text-sm font-semibold text-heading">Exit taxes (simplified)</h3>
             <InfoTip text="Canadian capital gains: portfolio gains taxed each year (non-registered; no TFSA/FHSA room). Home sale taxed at the horizon only when selling; full principal residence exemption by default." />
           </div>
-          <p className="mt-0.5 text-xs text-slate-500">
+          <p className="mt-0.5 text-xs text-muted">
             Annual tax on portfolio growth; home tax at exit when selling.
           </p>
         </div>
@@ -49,7 +49,7 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
           <div className={isWide ? "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start" : "space-y-3"}>
             <div className={isWide ? "lg:col-span-4" : ""}>
               <div className="mb-1.5 flex items-center gap-1.5">
-                <span className="text-xs font-medium text-slate-600">Principal residence</span>
+                <span className="text-xs font-medium text-body">Principal residence</span>
                 <InfoTip text="Full PRE: no tax on home sale gain. Partial: exempt fraction ≈ years as PR ÷ years owned. Not exempt: investment/rental property." />
               </div>
               <div
@@ -68,8 +68,8 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
                       onClick={() => onChange({ ...inputs, preExemption: mode })}
                       className={`rounded-md border px-2.5 py-1.5 text-xs transition-colors ${
                         active
-                          ? "border-indigo-300 bg-indigo-50 font-medium text-indigo-900"
-                          : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                          ? "border-indigo-300 bg-indigo-50 font-medium text-indigo-900 dark:border-indigo-700 dark:bg-indigo-950 dark:text-indigo-200"
+                          : "chip-inactive"
                       }`}
                     >
                       {PRE_LABELS[mode]}
@@ -109,7 +109,7 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
             </div>
           </div>
 
-          <p className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-[11px] leading-relaxed text-slate-600">
+          <p className="rounded-lg border border-default bg-surface-card px-3 py-2 text-[11px] leading-relaxed text-body">
             Portfolio tax <strong>{formatCurrency(exitTaxes.rentTax)}</strong> (renter, annual) · Home{" "}
             {inputs.applySaleCost
               ? exitTaxes.buyTax > 0

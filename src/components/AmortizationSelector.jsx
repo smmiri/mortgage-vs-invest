@@ -12,13 +12,13 @@ export default function AmortizationSelector({ value, onChange, meta, compact = 
   return (
     <div>
       <div className="mb-2 flex items-center gap-1.5">
-        <span className="text-sm font-medium text-slate-700">{meta.label}</span>
+        <span className="text-sm font-medium text-label">{meta.label}</span>
         {meta.help ? <InfoTip text={meta.help} /> : null}
       </div>
       <div
         role="radiogroup"
         aria-label={meta.label}
-        className={`grid gap-2 rounded-lg border border-slate-200 bg-slate-50 p-1 ${
+        className={`grid gap-2 rounded-lg border border-default bg-surface-inset p-1 ${
           compact ? "grid-cols-1" : "grid-cols-2"
         }`}
       >
@@ -34,14 +34,14 @@ export default function AmortizationSelector({ value, onChange, meta, compact = 
               className={`rounded-md px-3 py-2 text-left transition-colors ${
                 active
                   ? "bg-indigo-600 text-white shadow-sm"
-                  : "bg-white text-slate-700 hover:bg-slate-100"
+                  : "bg-surface-card text-label hover:bg-surface-inset"
               }`}
             >
               <div className="text-sm font-semibold">{label}</div>
               {!compact && hint ? (
                 <div
                   className={`mt-0.5 text-[11px] leading-snug ${
-                    active ? "text-indigo-100" : "text-slate-500"
+                    active ? "text-indigo-100" : "text-muted"
                   }`}
                 >
                   {hint}
@@ -68,8 +68,8 @@ export function CmhcInsuranceCallout({ results, inputs, variant = "full" }) {
 
   if (variant === "compact") {
     return (
-      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950">
-        <span className="font-semibold text-amber-900">CMHC required:</span>{" "}
+      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
+        <span className="font-semibold text-amber-900 dark:text-amber-200">CMHC required:</span>{" "}
         {formatPercent(cmhcRateApplied, 2)} premium ({formatCurrency(cmhcPremium)}) rolled into principal →{" "}
         <strong>{formatCurrency(totalPrincipal)}</strong> financed
         {inputs.amortization > 25 ? " (+0.20% rate for 30-yr amort)" : ""}.
@@ -78,15 +78,15 @@ export function CmhcInsuranceCallout({ results, inputs, variant = "full" }) {
   }
 
   return (
-    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950">
-      <div className="font-semibold text-amber-900">CMHC mortgage default insurance (required)</div>
+    <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/50 dark:text-amber-100">
+      <div className="font-semibold text-amber-900 dark:text-amber-200">CMHC mortgage default insurance (required)</div>
       <p className="mt-1">
         With less than 20% down, lenders require CMHC (or equivalent) insurance. The premium is{" "}
         <strong>{formatPercent(cmhcRateApplied, 2)}</strong> of the financed amount (
         <strong>{formatCurrency(cmhcPremium)}</strong>) and is <strong>added to your mortgage principal</strong>, not
         paid in cash at closing.
       </p>
-      <ul className="mt-2 list-inside list-disc space-y-0.5 text-amber-900/90">
+      <ul className="mt-2 list-inside list-disc space-y-0.5 text-amber-900/90 dark:text-amber-200/90">
         <li>
           Base mortgage: {formatCurrency(baseMortgage)} → principal with CMHC:{" "}
           <strong>{formatCurrency(totalPrincipal)}</strong>
