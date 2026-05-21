@@ -24,6 +24,8 @@ export default function LanguageToggle() {
             onClick={() => setLocale(lng)}
             aria-pressed={active}
             className={`rounded-full px-2.5 py-1 font-medium transition-colors ${
+              lng === "fa" ? "font-vazirmatn" : ""
+            } ${
               active
                 ? "bg-indigo-600 text-white"
                 : "text-muted hover:text-heading"

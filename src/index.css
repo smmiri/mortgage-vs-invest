@@ -14,6 +14,10 @@ html[lang="fa"] {
   --font-sans: var(--font-fa);
 }
 
+.font-vazirmatn {
+  font-family: var(--font-fa);
+}
+
 html[dir="rtl"] input[type="range"] {
   direction: ltr;
 }

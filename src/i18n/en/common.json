@@ -13,7 +13,6 @@
     "modelLabel": "What's in the model:",
     "p2": "semi-annual mortgage rates, province-level cash to close, optional sale costs at the end, and sliders for rent, growth, taxes, and the rest so you can stress-test your own assumptions."
   },
-  "scopeBanner": "This model uses Canadian mortgage rules, CMHC, provincial land transfer tax, and CRA-style capital gains — not Iran or other countries. Amounts are in CAD.",
   "calculator": {
     "assumptions": "Assumptions",
     "assumptionsHint": "Drag sliders or type values. Your assumptions are saved in this browser automatically. Hover",
