@@ -100,13 +100,19 @@ git push -u origin main
 
 ### 2. GitHub Pages (free public URL)
 
-1. Open **https://github.com/smmiri/mortgage-vs-invest** → **Settings** → **Pages**.
-2. **Build and deployment** → **Source**: **GitHub Actions**.
-3. Push to `main` (or run **Deploy to GitHub Pages** under **Actions**).
+**Required once** (otherwise the deploy job fails with `404` / `Creating Pages deployment failed`):
+
+1. Open **https://github.com/smmiri/mortgage-vs-invest/settings/pages**
+2. Under **Build and deployment**, set **Source** to **GitHub Actions** (not “Deploy from a branch”).
+3. Save. No branch or folder selection is needed when using Actions.
+
+Then either push to `main` or **Actions** → **Deploy to GitHub Pages** → **Run workflow**.
 
 Workflow: `.github/workflows/deploy-pages.yml`. Live site:
 
 **https://smmiri.github.io/mortgage-vs-invest/**
+
+If deploy still fails: confirm the repo is **public** (or that your plan allows Pages on private repos), and that **Settings → Actions → General → Workflow permissions** allows read/write for workflows.
 
 ### 3. Local build matching Pages
 
@@ -123,26 +129,6 @@ npm run preview
 Drop `dist/` on Vercel, Netlify, or Cloudflare Pages (build: `npm run build`, output: `dist`). For a custom domain use `VITE_BASE=/` and your real `VITE_SITE_URL`.
 
 `VITE_SITE_URL` rewrites `index.html`, `robots.txt`, and `sitemap.xml` at build time (see `scripts/configure-site-url.mjs`).
-
-## SEO
-
-The site ships with:
-
-- A focused `<title>` and `description` tuned for "buy vs rent calculator" and Canadian mortgage keywords.
-- Open Graph + Twitter card meta with a 1200×630 SVG social image at `public/og-image.svg`.
-- JSON-LD structured data: a `WebApplication` schema for the calculator itself, and a `FAQPage` schema covering the methodology Q&A. Validate at [Google Rich Results Test](https://search.google.com/test/rich-results).
-- A canonical `<link rel="canonical">` so deploys with multiple hostnames (e.g. `preview.*`, `www.*`) don't dilute ranking.
-- `robots.txt` and `sitemap.xml` in `public/` — both get the deployed host substituted in.
-- `noscript` block with a short description of the tool for crawlers that don't run JavaScript.
-- Skip-to-content link, semantic landmarks (`<header>`, `<main>`, `<section>`, `<footer>`), and an `aria-label` on each major region for accessibility (which also helps SEO).
-- `font-display: swap` on Google Fonts and `preconnect` hints to cut LCP.
-
-Things to do yourself before launch:
-
-- Replace the title, description, and keywords if your audience is not Canadian buyers.
-- Convert `og-image.svg` to a 1200×630 PNG for the broadest social platform support and update the `og:image` extension. Many platforms accept SVG now, but PNG is the safest default.
-- Add a `<meta name="google-site-verification">` tag if you want Google Search Console.
-- Add an analytics snippet (Plausible, Fathom, Umami, GA) in `index.html`. The repo intentionally ships with none.
 
 ## Project layout
 
