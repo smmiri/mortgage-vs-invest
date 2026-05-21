@@ -26,6 +26,7 @@
     "test": "node --test src/lib/model.test.js src/lib/closing-costs.test.js src/lib/exit-taxes.test.js src/lib/persist-inputs.test.js src/lib/theme.test.js"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.2.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "recharts": "^2.15.3"

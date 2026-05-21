@@ -7,6 +7,7 @@ import {
   simulate,
 } from "../lib/model.js";
 import { formatCurrency, formatCurrencyDecimal, formatPercent } from "../lib/format.js";
+import { RULES_AS_OF } from "../lib/site-meta.js";
 
 const README_PATH = "blob/main/README.md";
 
@@ -30,7 +31,8 @@ export default function Methodology({ repoUrl = "https://github.com/smmiri/mortg
         <a className="font-medium link-accent" href={readmeUrl} target="_blank" rel="noreferrer noopener">
           README on GitHub
         </a>
-        .
+        . Provincial LTT, GST/HST rebates, and CMHC tiers were last reviewed for{" "}
+        <strong className="font-medium text-label">{RULES_AS_OF}</strong>.
       </p>
 
       <div className="mt-8 rounded-2xl border border-default bg-surface-inset p-5 sm:p-6">

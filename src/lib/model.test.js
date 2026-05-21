@@ -191,3 +191,19 @@ test("after-tax chart points match headline delta at horizon", () => {
   assert.equal(last.buyWealthAfterTax, r.final.buyAfterTax);
   assert.equal(last.rentWealthAfterTax, r.final.rentAfterTax);
 });
+
+test("after mortgage payoff, owning cost excludes P&I", () => {
+  const r = simulate({ ...DEFAULT_INPUTS, years: 30, amortization: 25 });
+  const y26 = r.trajectory.find((p) => p.year === 26);
+  assert.ok(y26, "year 26 should exist");
+  assert.equal(y26.mortgageBalance, 0);
+  assert.ok(
+    y26.monthlyOwningCost < r.monthlyPayment,
+    "post-payoff owning cost should not include full P&I",
+  );
+});
+
+test("warnings when horizon exceeds amortization", () => {
+  const r = simulate({ ...DEFAULT_INPUTS, years: 30, amortization: 25 });
+  assert.ok(r.warnings.some((w) => /exceeds amortization/i.test(w.text)));
+});

@@ -257,14 +257,15 @@ export function simulate(inputs) {
 
     let monthOwningCost = 0;
     for (let m = 0; m < 12; m++) {
+      const mortgageDue = mortgageBalance > 0 ? monthlyPayment : 0;
       const interest = mortgageBalance * r;
-      const principalPayment = Math.min(monthlyPayment - interest, mortgageBalance);
+      const principalPayment = Math.min(mortgageDue - interest, mortgageBalance);
       mortgageBalance = Math.max(0, mortgageBalance - principalPayment);
-      const interestThisMonth = Math.min(interest, monthlyPayment);
+      const interestThisMonth = Math.min(interest, mortgageDue);
       totalInterestPaid += interestThisMonth;
       totalPrincipalPaid += principalPayment;
 
-      const owningCost = monthlyPayment + expense;
+      const owningCost = mortgageDue + expense;
       monthOwningCost += owningCost;
       totalOwningCost += owningCost;
       totalRentPaid += currentMonthlyRent;
@@ -421,7 +422,7 @@ export function simulate(inputs) {
       totalRentPaid: Math.round(totalRentPaid),
       totalOwningCost: Math.round(totalOwningCost),
     },
-    warnings: collectWarnings(inputs, rateInfo, baseMortgage),
+    warnings: collectWarnings(inputs, rateInfo, baseMortgage, safeYears, safeAmort),
   };
 }
 
@@ -436,9 +437,9 @@ function findBreakevenYear(trajectory) {
   return null;
 }
 
-function collectWarnings(inputs, rate, baseMortgage) {
+function collectWarnings(inputs, rate, baseMortgage, years, amortization) {
   const warnings = [];
-  const { propertyPrice, downPayment, amortization } = inputs;
+  const { propertyPrice, downPayment } = inputs;
   if (propertyPrice <= 0) {
     warnings.push({ level: "error", text: "Property price must be greater than zero." });
     return warnings;
@@ -470,6 +471,12 @@ function collectWarnings(inputs, rate, baseMortgage) {
     warnings.push({
       level: "info",
       text: "Mortgage rate is 0%; payment is principal / amortization months.",
+    });
+  }
+  if (years > amortization && baseMortgage > 0) {
+    warnings.push({
+      level: "info",
+      text: `Time horizon (${years}y) exceeds amortization (${amortization}y). After the mortgage is paid off, owning cost drops to property expenses only (no P&I).`,
     });
   }
   return warnings;

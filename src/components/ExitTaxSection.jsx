@@ -46,6 +46,11 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
 
       {on ? (
         <div className={isWide ? "space-y-4 p-4 sm:p-5" : "mt-3 space-y-3"}>
+          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+            <strong className="font-semibold">Taxable portfolio assumption.</strong> Portfolio gains are taxed each
+            year as if held in a non-registered account. TFSA, FHSA, and RRSP sheltering are not modeled. Turn exit
+            taxes off, or lower the marginal rate, to approximate tax-sheltered investing.
+          </p>
           <div className={isWide ? "grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-start" : "space-y-3"}>
             <div className={isWide ? "lg:col-span-4" : ""}>
               <div className="mb-1.5 flex items-center gap-1.5">

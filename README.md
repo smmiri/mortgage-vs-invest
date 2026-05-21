@@ -151,7 +151,7 @@ buy_wealth_m = down_payment + (liquid_m − liquid_0) + buyer_side_portfolio_m
 - Renter’s insurance, deposits, or moving costs.
 - Statutory rent-control caps (set your own rent-increase %).
 
-Tax and closing-cost rules change with budgets and indexing; figures are **estimates** for sensitivity analysis, not filings.
+Tax and closing-cost rules change with budgets and indexing; figures are **estimates** for sensitivity analysis, not filings. Rules in the model were last reviewed for **May 2026** (see `src/lib/site-meta.js`).
 
 ---
 

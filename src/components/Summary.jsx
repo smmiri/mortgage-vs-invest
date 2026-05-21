@@ -8,15 +8,15 @@ export default function Summary({ results }) {
   const useExitTax = inputs.modelExitTaxes !== false;
   const delta = useExitTax ? final.deltaAfterTax : final.delta;
   const preTaxDelta = final.delta;
-  const winnerLabel = delta === 0 ? "Tie" : delta > 0 ? "Buying wins" : "Renting wins";
+  const outcomeLabel = delta === 0 ? "Paths even" : delta > 0 ? "Buy path ahead" : "Rent path ahead";
   const breakevenText =
     final.breakeven == null
       ? `No crossover within ${horizon} years`
       : `Lines cross at year ${final.breakeven}`;
 
   const taxSublabel = useExitTax
-    ? `${winnerLabel} · Pre-tax ${formatSignedCurrency(preTaxDelta)} · Home ${formatCurrency(exitTaxes.buyTax)} · Portfolio ${formatCurrency(exitTaxes.rentTax)}`
-    : `${winnerLabel} · ${breakevenText}`;
+    ? `${outcomeLabel} · Pre-tax ${formatSignedCurrency(preTaxDelta)} · Home ${formatCurrency(exitTaxes.buyTax)} · Portfolio ${formatCurrency(exitTaxes.rentTax)}`
+    : `${outcomeLabel} · ${breakevenText}`;
 
   return (
     <section aria-label="Headline results" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
@@ -24,11 +24,11 @@ export default function Summary({ results }) {
         tone={delta >= 0 ? "positive" : "negative"}
         label={useExitTax ? `After-tax delta (year ${horizon})` : `Delta at year ${horizon}`}
         value={formatSignedCurrency(delta)}
-        sublabel={useExitTax ? taxSublabel : `${winnerLabel} · ${breakevenText}`}
+        sublabel={useExitTax ? taxSublabel : `${outcomeLabel} · ${breakevenText}`}
         help={
           useExitTax
             ? "Buyer after-tax wealth minus renter after-tax wealth at the horizon. Matches the chart. Portfolio tax accrues annually; home sale tax at exit when selling (PRE by default)."
-            : "Buyer net wealth minus renter net wealth at the end of the time horizon. Positive means buying wins."
+            : "Buyer net wealth minus renter net wealth at the end of the time horizon. Positive means the buy path has higher net wealth (not a recommendation)."
         }
       />
       <StatCard
