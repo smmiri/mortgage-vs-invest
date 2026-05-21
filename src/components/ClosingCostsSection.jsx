@@ -23,13 +23,14 @@ export default function ClosingCostsSection({
 
   const breakdown = results?.closingCostsBreakdown?.breakdown || [];
   const hasBreakdown = !isManual && breakdown.length > 0;
+  const showMunicipalLtt = isOntario || isQuebec;
 
   return (
     <section
       id={id}
-      className="rounded-2xl border border-default bg-surface-muted shadow-sm"
+      className="overflow-hidden rounded-2xl border border-default bg-surface-muted shadow-sm"
     >
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-default bg-surface-card px-4 py-3 sm:px-5">
+      <header className="panel-header flex flex-wrap items-start justify-between gap-3 px-4 py-3 sm:px-5">
         <div>
           <h3 className="text-sm font-semibold text-heading">Cash to close</h3>
           <p className="mt-0.5 text-xs text-muted">
@@ -58,30 +59,16 @@ export default function ClosingCostsSection({
             <div
               className={
                 layout === "fullWidth"
-                  ? "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4"
-                  : "grid grid-cols-1 gap-3"
+                  ? `grid grid-cols-1 items-stretch gap-3 sm:grid-cols-2 ${
+                      showMunicipalLtt ? "lg:grid-cols-4" : "lg:grid-cols-3"
+                    }`
+                  : "grid grid-cols-1 items-stretch gap-3"
               }
             >
-              <div>
-                <div className="mb-1.5 flex items-center gap-1.5">
-                  <label htmlFor="province-select" className="text-sm font-medium text-label">
-                    Province
-                  </label>
-                  <InfoTip text="Drives land transfer tax brackets, GST/HST or QST handling, and provincial new-housing rebates." />
-                </div>
-                <select
-                  id="province-select"
-                  value={inputs.province}
-                  onChange={(e) => update({ province: e.target.value })}
-                  className="select-field"
-                >
-                  {PROVINCE_CODES.map((code) => (
-                    <option key={code} value={code}>
-                      {PROVINCES[code].name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <ProvinceField
+                value={inputs.province}
+                onChange={(province) => update({ province })}
+              />
 
               <ToggleRow
                 checked={inputs.firstTimeBuyer}
@@ -95,7 +82,7 @@ export default function ClosingCostsSection({
                 label="Newly built / new construction"
                 help="Resale homes are GST/HST exempt. New construction is taxable: federal GST 5% (with rebates) plus any provincial portion in HST provinces. In BC, also unlocks the Newly Built Home Exemption from PTT (full ≤ $1.1M, partial to $1.15M)."
               />
-              {isOntario || isQuebec ? (
+              {showMunicipalLtt ? (
                 <ToggleRow
                   checked={inputs.includeTorontoLtt}
                   onChange={(v) => update({ includeTorontoLtt: v })}
@@ -110,9 +97,7 @@ export default function ClosingCostsSection({
                       : "Montréal's welcome tax adds higher brackets above $500k vs the provincial Quebec baseline."
                   }
                 />
-              ) : (
-                <div className="hidden lg:block" aria-hidden />
-              )}
+              ) : null}
             </div>
 
             <InputField
@@ -167,11 +152,40 @@ function ModeToggle({ value, onChange }) {
   );
 }
 
+/** Shared min height so province + toggles align in the closing-costs grid. */
+const CLOSING_COST_CONTROL_CLASS =
+  "flex h-full min-h-[4.5rem] rounded-md border border-default bg-surface-card px-3 py-2.5";
+
+function ProvinceField({ value, onChange }) {
+  return (
+    <div className={`${CLOSING_COST_CONTROL_CLASS} flex-col justify-center gap-2`}>
+      <div className="flex items-center gap-1.5">
+        <label htmlFor="province-select" className="text-sm font-medium text-label">
+          Province
+        </label>
+        <InfoTip text="Drives land transfer tax brackets, GST/HST or QST handling, and provincial new-housing rebates." />
+      </div>
+      <select
+        id="province-select"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="select-field w-full"
+      >
+        {PROVINCE_CODES.map((code) => (
+          <option key={code} value={code}>
+            {PROVINCES[code].name}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 function ToggleRow({ checked, onChange, label, help }) {
   const id = `toggle-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
-    <div className="flex items-center justify-between gap-3 rounded-md border border-default bg-surface-card px-3 py-2.5">
-      <div className="flex min-w-0 flex-1 items-start gap-1.5">
+    <div className={`${CLOSING_COST_CONTROL_CLASS} items-center justify-between gap-3`}>
+      <div className="flex min-w-0 flex-1 items-center gap-1.5">
         <label htmlFor={id} className="text-sm leading-snug text-label">
           {label}
         </label>

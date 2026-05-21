@@ -178,8 +178,8 @@ export default function InputPanel({ inputs, results, onChange, onReset }) {
 
 function InputColumn({ title, children }) {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-default bg-surface-card shadow-sm">
-      <header className="panel-header px-4 py-3">
+    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-default bg-surface-card shadow-sm">
+      <header className="panel-header shrink-0 px-4 py-3">
         <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">{title}</h3>
       </header>
       <div className="flex flex-1 flex-col gap-4 p-4">{children}</div>

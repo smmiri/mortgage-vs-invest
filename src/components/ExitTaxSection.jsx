@@ -18,14 +18,14 @@ export default function ExitTaxSection({ inputs, results, onChange, onField, lay
   const isWide = layout === "fullWidth";
 
   const shell = isWide
-    ? "rounded-2xl border border-default bg-surface-muted shadow-sm"
-    : "space-y-3 rounded-lg border border-subtle bg-surface-muted p-3";
+    ? "overflow-hidden rounded-2xl border border-default bg-surface-muted shadow-sm"
+    : "space-y-3 overflow-hidden rounded-lg border border-subtle bg-surface-muted p-3";
 
   return (
     <section id="exit-taxes" className={shell}>
       <header
-        className={`flex flex-wrap items-start justify-between gap-3 border-b border-default bg-surface-card ${
-          isWide ? "px-4 py-3 sm:px-5" : "border-0 bg-transparent p-0 pb-0"
+        className={`flex flex-wrap items-start justify-between gap-3 ${
+          isWide ? "panel-header px-4 py-3 sm:px-5" : "border-0 bg-transparent p-0 pb-0"
         }`}
       >
         <div>
