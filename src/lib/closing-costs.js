@@ -167,21 +167,21 @@ export function computeLandTransferTax({
 
   let provincialGross = bracketedTax(price, LTT_BRACKETS[province]);
   let provincialRebate = 0;
-  const lines = [];
+  const lineKeys = [];
 
   if (province === "BC") {
     // FTB exemption (resale or new) — full <= $835k, partial to $860k.
     if (firstTimeBuyer) {
       if (price <= 835_000) {
         provincialRebate = provincialGross;
-        lines.push("BC FTB Exemption (full)");
+        lineKeys.push("bcFtbFull");
       } else if (price <= 860_000) {
         const fullAtThreshold = bracketedTax(835_000, LTT_BRACKETS.BC);
         provincialRebate = Math.max(
           0,
           (fullAtThreshold * (860_000 - price)) / 25_000,
         );
-        lines.push("BC FTB Exemption (partial phase-out)");
+        lineKeys.push("bcFtbPartial");
       }
     }
     // Newly Built Home exemption (residential) — full <= $1.1M, partial to $1.15M.
@@ -196,13 +196,13 @@ export function computeLandTransferTax({
       }
       if (nbRebate > provincialRebate) {
         provincialRebate = nbRebate;
-        lines.push("BC Newly Built Home Exemption");
+        lineKeys.push("bcNewlyBuilt");
       }
     }
   } else if (province === "ON") {
     if (firstTimeBuyer) {
       provincialRebate = Math.min(provincialGross, 4_000);
-      lines.push("ON FTB Refund (up to $4,000)");
+      lineKeys.push("onFtbRefund");
     }
   } else if (province === "QC") {
     // Montreal welcome tax is a city-only surtax. We approximate by treating
@@ -211,14 +211,14 @@ export function computeLandTransferTax({
     // override in manual mode.
     if (includeTorontoLtt) {
       provincialGross = bracketedTax(price, MONTREAL_LTT);
-      lines.push("Quebec welcome tax (Montreal brackets)");
+      lineKeys.push("qcMontreal");
     } else {
-      lines.push("Quebec welcome tax (provincial baseline)");
+      lineKeys.push("qcProvincial");
     }
   } else if (province === "PE") {
     if (firstTimeBuyer && price <= 200_000) {
       provincialRebate = provincialGross;
-      lines.push("PEI Real Property Transfer Tax (FTB exemption)");
+      lineKeys.push("peiFtb");
     }
   }
 
@@ -229,9 +229,9 @@ export function computeLandTransferTax({
     municipalGross = bracketedTax(price, LTT_BRACKETS.TORONTO_MLTT);
     if (firstTimeBuyer) {
       municipalRebate = Math.min(municipalGross, 4_475);
-      lines.push("Toronto MLTT FTB Refund (up to $4,475)");
+      lineKeys.push("torontoFtb");
     } else {
-      lines.push("Toronto Municipal Land Transfer Tax");
+      lineKeys.push("torontoMltt");
     }
   }
 
@@ -245,7 +245,7 @@ export function computeLandTransferTax({
     municipalRebate,
     municipalNet,
     total: provincialNet + municipalNet,
-    lines,
+    lineKeys,
   };
 }
 
@@ -258,8 +258,14 @@ function emptyLtt() {
     municipalRebate: 0,
     municipalNet: 0,
     total: 0,
-    lines: [],
+    lineKeys: [],
   };
+}
+
+/** i18n key under closing.lttLabel.* */
+export function lttLabelKey(province) {
+  if (province === "BC" || province === "ON" || province === "QC") return `lttLabel.${province}`;
+  return "lttLabel.default";
 }
 
 // ---------------------------------------------------------------------------
@@ -358,17 +364,17 @@ export function computeGstHstOnNewHome({
     return emptyGst();
   }
 
-  const lines = [];
+  const lineKeys = [];
   const federalGross = price * FEDERAL_GST_RATE;
   let federalRebate = federalStandardRebate(price);
   if (firstTimeBuyer) {
     const ftbRebate = federalFtbRebate(price);
     if (ftbRebate > federalRebate) {
       federalRebate = ftbRebate;
-      lines.push("Federal 2025 First-Time Home Buyer GST Rebate");
+      lineKeys.push("gstFtb2025");
     }
   }
-  if (federalRebate > 0 && !lines.length) lines.push("Federal GST New Housing Rebate (CRA RC4028)");
+  if (federalRebate > 0 && !lineKeys.length) lineKeys.push("gstStandard");
 
   let provincialGross = 0;
   let provincialRebate = 0;
@@ -379,11 +385,11 @@ export function computeGstHstOnNewHome({
   if (prov.hasHST) {
     provincialGross = price * prov.provincialHstRate;
     provincialRebate = provincialHstRebate(price, province, provincialGross);
-    if (provincialRebate > 0) lines.push(`${province} New Housing Rebate (provincial portion)`);
+    if (provincialRebate > 0) lineKeys.push("provincialNewHousing");
   } else if (prov.taxRegime === "GST_QST") {
     qstGross = price * 0.09975;
     qstRebateAmount = qstRebate(price, qstGross);
-    if (qstRebateAmount > 0) lines.push("Quebec QST New Residential Rebate");
+    if (qstRebateAmount > 0) lineKeys.push("qcQstRebate");
   }
 
   const total =
@@ -400,7 +406,8 @@ export function computeGstHstOnNewHome({
     qstGross,
     qstRebate: qstRebateAmount,
     total: Math.max(0, total),
-    lines,
+    lineKeys,
+    provincialNewHousingProvince: province,
   };
 }
 
@@ -414,7 +421,8 @@ function emptyGst() {
     qstGross: 0,
     qstRebate: 0,
     total: 0,
-    lines: [],
+    lineKeys: [],
+    provincialNewHousingProvince: null,
   };
 }
 
@@ -476,11 +484,11 @@ export function computeClosingCosts({
   const breakdown = [];
   if (ltt.provincialGross > 0 || ltt.municipalGross > 0) {
     breakdown.push({
-      label: lttLabel(province),
+      labelKey: lttLabelKey(province),
       amount: ltt.total,
-      sublabel: ltt.lines.length
-        ? ltt.lines.join(" · ")
-        : `${province} schedule applied`,
+      lineKeys: ltt.lineKeys,
+      sublabelKey: ltt.lineKeys.length ? null : "lttSchedule",
+      sublabelParams: { province },
       detail: {
         provincialGross: ltt.provincialGross,
         provincialRebate: ltt.provincialRebate,
@@ -490,16 +498,22 @@ export function computeClosingCosts({
     });
   } else {
     breakdown.push({
-      label: lttLabel(province),
+      labelKey: lttLabelKey(province),
       amount: 0,
-      sublabel: `${province} has no provincial land transfer tax`,
+      sublabelKey: "noProvincialLtt",
+      sublabelParams: { province },
     });
   }
   if (gst.applies) {
     breakdown.push({
-      label: "GST / HST on new construction",
+      labelKey: "gstHst",
       amount: gst.total,
-      sublabel: gst.lines.length ? gst.lines.join(" · ") : "Net of rebates",
+      lineKeys: gst.lineKeys,
+      sublabelKey: gst.lineKeys.length ? null : "netOfRebates",
+      sublabelParams:
+        gst.lineKeys.includes("provincialNewHousing") && gst.provincialNewHousingProvince
+          ? { province: gst.provincialNewHousingProvince }
+          : undefined,
       detail: {
         federalGross: gst.federalGross,
         federalRebate: gst.federalRebate,
@@ -512,24 +526,18 @@ export function computeClosingCosts({
   }
   if (pstOnCmhc > 0) {
     breakdown.push({
-      label: "PST on CMHC premium",
+      labelKey: "pstCmhc",
       amount: pstOnCmhc,
-      sublabel: `${province} levies PST on the CMHC default insurance premium`,
+      sublabelKey: "pstCmhcSub",
+      sublabelParams: { province },
     });
   }
   if (other > 0) {
     breakdown.push({
-      label: "Legal, title, inspection",
+      labelKey: "legalTitle",
       amount: other,
-      sublabel: "Lawyer ($1.5–2.5k) + title insurance ($300–500) + inspection / appraisal ($500–1k)",
+      sublabelKey: "legalSub",
     });
   }
   return { landTransferTax: ltt, gstHst: gst, pstOnCmhc, other, total, breakdown };
-}
-
-function lttLabel(province) {
-  if (province === "BC") return "BC Property Transfer Tax";
-  if (province === "ON") return "Ontario Land Transfer Tax";
-  if (province === "QC") return "Quebec welcome tax";
-  return `${province} Land Transfer Tax`;
 }

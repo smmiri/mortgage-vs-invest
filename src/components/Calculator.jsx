@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { DEFAULT_INPUTS } from "../lib/defaults.js";
 import {
   clearInputsCookie,
@@ -20,6 +21,7 @@ function loadInitialInputs() {
 }
 
 export default function Calculator() {
+  const { t } = useTranslation();
   const [inputs, setInputs] = useState(loadInitialInputs);
   const results = useMemo(() => simulate(inputs), [inputs]);
 
@@ -40,8 +42,8 @@ export default function Calculator() {
       <div className="mt-10 space-y-6 border-t border-default pt-10">
         <header className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-heading">Results</h2>
-            <p className="text-sm text-muted">Updates live as you change inputs above.</p>
+            <h2 className="text-lg font-semibold text-heading">{t("calculator.results")}</h2>
+            <p className="text-sm text-muted">{t("calculator.resultsHint")}</p>
           </div>
         </header>
 

@@ -8,11 +8,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { formatCompactCurrency, formatCurrency } from "../lib/format.js";
+import { useTranslation } from "react-i18next";
+import { useFormat } from "../hooks/useFormat.js";
 import { useTheme } from "./ThemeProvider.jsx";
 
-const BUY_COLOR = "#2563eb"; // blue-600
-const RENT_COLOR = "#059669"; // emerald-600
+const BUY_COLOR = "#2563eb";
+const RENT_COLOR = "#059669";
 
 const CHART_THEME = {
   light: {
@@ -36,6 +37,8 @@ const CHART_THEME = {
 };
 
 export default function WealthChart({ results }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { resolved } = useTheme();
   const colors = CHART_THEME[resolved];
   const { trajectory, final, inputs } = results;
@@ -59,41 +62,33 @@ export default function WealthChart({ results }) {
       <figcaption className="flex flex-col gap-1 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 className="text-base font-semibold text-heading">
-            Wealth trajectory{afterTax ? " (after tax)" : ""}
+            {afterTax ? t("chart.titleAfterTax") : t("chart.title")}
           </h2>
           <p className="text-xs text-muted">
-            {afterTax ? (
-              <>
-                Lines match the headline delta. Portfolio gains are taxed each year (non-registered assumption); home
-                sale tax applies at year {inputs.years} only when selling.
-              </>
-            ) : (
-              <>
-                Both paths start with the same cash stake. The buy line tracks liquid equity plus any monthly surplus
-                invested; the rent line tracks the market portfolio plus monthly top-ups.
-              </>
-            )}
+            {afterTax
+              ? t("chart.afterTaxCaption", { year: inputs.years })
+              : t("chart.preTaxCaption")}
           </p>
         </div>
         <div className="flex items-center gap-3 text-xs text-body">
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full bg-blue-600" />
-            Buy
+            {t("chart.buy")}
           </span>
           <span className="flex items-center gap-1.5">
             <span className="inline-block h-2 w-2 rounded-full bg-emerald-600" />
-            Rent &amp; invest
+            {t("chart.rent")}
           </span>
         </div>
       </figcaption>
 
-      <div className="h-72 w-full sm:h-96">
+      <div className="chart-ltr h-72 w-full sm:h-96">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 12, right: 16, left: 0, bottom: 4 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={colors.grid} />
             <XAxis
               dataKey="year"
-              tickFormatter={(y) => (y === 0 ? "Today" : `Y${y}`)}
+              tickFormatter={(y) => (y === 0 ? t("chart.today") : `Y${y}`)}
               tick={{ fontSize: 12, fill: colors.tick }}
               axisLine={false}
               tickLine={false}
@@ -102,15 +97,15 @@ export default function WealthChart({ results }) {
               allowDecimals={false}
             />
             <YAxis
-              tickFormatter={(v) => formatCompactCurrency(v).replace("$", "$")}
+              tickFormatter={(v) => fmt.formatCompactCurrency(v)}
               tick={{ fontSize: 12, fill: colors.tick }}
               axisLine={false}
               tickLine={false}
-              width={64}
+              width={72}
             />
             <Tooltip
               cursor={{ stroke: colors.cursor, strokeWidth: 1 }}
-              content={<ChartTooltip afterTax={afterTax} colors={colors} />}
+              content={<ChartTooltip afterTax={afterTax} colors={colors} fmt={fmt} t={t} />}
             />
             {breakeven != null ? (
               <ReferenceLine
@@ -119,7 +114,7 @@ export default function WealthChart({ results }) {
                 strokeDasharray="4 4"
                 label={{
                   position: "top",
-                  value: `Crossover · Y${breakeven}`,
+                  value: t("chart.crossover", { year: breakeven }),
                   fill: colors.refLabel,
                   fontSize: 11,
                 }}
@@ -128,7 +123,7 @@ export default function WealthChart({ results }) {
             <Line
               type="monotone"
               dataKey="buy"
-              name="Buy"
+              name={t("chart.buy")}
               stroke={BUY_COLOR}
               strokeWidth={2.5}
               dot={{ r: 3, strokeWidth: 0, fill: BUY_COLOR }}
@@ -138,7 +133,7 @@ export default function WealthChart({ results }) {
             <Line
               type="monotone"
               dataKey="rent"
-              name="Rent & invest"
+              name={t("chart.rent")}
               stroke={RENT_COLOR}
               strokeWidth={2.5}
               dot={{ r: 3, strokeWidth: 0, fill: RENT_COLOR }}
@@ -152,7 +147,7 @@ export default function WealthChart({ results }) {
   );
 }
 
-function ChartTooltip({ active, payload, label, afterTax, colors }) {
+function ChartTooltip({ active, payload, label, afterTax, colors, fmt, t }) {
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload;
   const buy = payload.find((p) => p.dataKey === "buy")?.value ?? 0;
@@ -167,23 +162,28 @@ function ChartTooltip({ active, payload, label, afterTax, colors }) {
       className="rounded-lg border p-3 text-xs shadow-md"
       style={{ borderColor: colors.tooltipBorder, backgroundColor: colors.tooltipBg }}
     >
-      <div className="font-semibold text-label">{isToday ? "Today" : `Year ${label}`}</div>
-      <div className="mt-2 grid grid-cols-[auto_auto] gap-x-3 gap-y-1 tabular-nums">
-        <span className="text-muted">Buy</span>
-        <span className="text-right font-medium text-heading">{formatCurrency(buy)}</span>
-        <span className="text-muted">Rent &amp; invest</span>
-        <span className="text-right font-medium text-heading">{formatCurrency(rent)}</span>
-        <span className="text-muted">Difference</span>
+      <div className="font-semibold text-label">
+        {isToday ? t("chart.today") : t("chart.year", { year: label })}
+      </div>
+      <div className="mt-2 grid grid-cols-[auto_auto] gap-x-3 gap-y-1 tabular-nums numeric-ltr">
+        <span className="text-muted">{t("chart.buy")}</span>
+        <span className="text-end font-medium text-heading">{fmt.formatCurrency(buy)}</span>
+        <span className="text-muted">{t("chart.rent")}</span>
+        <span className="text-end font-medium text-heading">{fmt.formatCurrency(rent)}</span>
+        <span className="text-muted">{t("chart.difference")}</span>
         <span
-          className={`text-right font-semibold ${delta >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"}`}
+          className={`text-end font-semibold ${delta >= 0 ? "text-emerald-700 dark:text-emerald-400" : "text-rose-700 dark:text-rose-400"}`}
         >
           {delta >= 0 ? "+" : "−"}
-          {formatCurrency(Math.abs(delta))}
+          {fmt.formatCurrency(Math.abs(delta))}
         </span>
       </div>
       {showPreTax ? (
         <p className="mt-2 border-t border-subtle pt-2 text-[10px] text-muted">
-          Pre-tax at exit: buy {formatCurrency(row.buyPreTax)}, rent {formatCurrency(row.rentPreTax)}
+          {t("chart.preTaxExit", {
+            buy: fmt.formatCurrency(row.buyPreTax),
+            rent: fmt.formatCurrency(row.rentPreTax),
+          })}
         </p>
       ) : null}
     </div>

@@ -155,6 +155,12 @@ Tax and closing-cost rules change with budgets and indexing; figures are **estim
 
 ---
 
+## Languages
+
+- **English** (default) and **فارسی (Farsi)** with RTL layout and Persian numerals (`fa-IR`).
+- Toggle language in the header; preference is stored in `localStorage` (`rvb_locale`). Same URL for both.
+- Farsi copy is machine-translated draft quality; tax/legal strings should be reviewed by a fluent speaker.
+
 ## Using this repository
 
 - **Use the app:** open [rentorbuy.smmiri.com](https://rentorbuy.smmiri.com/) and adjust inputs; methodology and a worked example are in the app.

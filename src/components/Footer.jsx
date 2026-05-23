@@ -1,69 +1,78 @@
+import { Trans, useTranslation } from "react-i18next";
 import { RULES_AS_OF } from "../lib/site-meta.js";
 
+const codeClass = "rounded bg-slate-100 px-1 dark:bg-slate-800";
+
+const CV_SITE_URL = "https://smmiri.com";
+
 export default function Footer({ repoUrl }) {
+  const { t } = useTranslation("legal");
+
   return (
     <footer className="border-t border-default bg-surface-card">
       <div className="mx-auto max-w-6xl space-y-8 px-4 py-8 text-xs text-muted sm:px-6">
         <p className="max-w-3xl leading-relaxed">
-          <strong className="font-semibold text-label">Not financial advice.</strong> Simplified month-by-month
-          model for Canadian buyers: includes CMHC insurance, province-aware land transfer tax, GST/HST on new
-          builds, optional sale costs, and simplified exit capital gains (PRE on home; taxable portfolio).
-          Excludes annual tax drag, TFSA/FHSA room, RRSP, refinancing/renewal risk, large one-off repairs,
-          and moving or renter&apos;s insurance. Assumes constant growth rates. Use as a sensitivity tool, not a
-          recommendation.
+          <Trans
+            ns="legal"
+            i18nKey="disclaimer"
+            components={{ strong: <strong className="font-semibold text-label" /> }}
+          />
         </p>
 
-        <nav aria-label="Legal" className="flex flex-wrap gap-x-4 gap-y-1 text-label">
+        <nav aria-label={t("navLegal")} className="flex flex-wrap items-center gap-x-4 gap-y-1 text-label">
           <a href="#privacy" className="hover:text-heading">
-            Privacy
+            {t("privacy")}
           </a>
           <a href="#terms" className="hover:text-heading">
-            Terms
+            {t("terms")}
           </a>
           {repoUrl ? (
             <a href={repoUrl} className="hover:text-heading" target="_blank" rel="noreferrer noopener">
-              GitHub
+              {t("github")}
             </a>
           ) : null}
-          <a href="https://smmiri.com" className="hover:text-heading" target="_blank" rel="noreferrer noopener">
-            Mohammad Miri
+          <a href={CV_SITE_URL} className="hover:text-heading" target="_blank" rel="noreferrer noopener">
+            {t("author")}
           </a>
           <span aria-hidden>·</span>
-          <span>MIT licensed</span>
+          <span>{t("mit")}</span>
         </nav>
 
         <section id="privacy" className="max-w-3xl scroll-mt-20 space-y-2 leading-relaxed">
-          <h2 className="text-sm font-semibold text-heading">Privacy</h2>
+          <h2 className="text-sm font-semibold text-heading">{t("privacyTitle")}</h2>
           <p>
-            This calculator runs entirely in your browser. Your inputs are not sent to a server. The only data
-            stored locally is a first-party cookie named <code className="rounded bg-slate-100 px-1 dark:bg-slate-800">rvb_inputs</code>{" "}
-            (calculator assumptions, up to one year) so settings persist when you return. Use <strong>Reset to defaults</strong>{" "}
-            in the calculator to clear it. No analytics or advertising trackers are used.
+            <Trans
+              ns="legal"
+              i18nKey="privacyP1"
+              components={{
+                strong: <strong />,
+                code: <code className={codeClass} />,
+              }}
+            />
           </p>
-          <p>
-            Fonts are self-hosted in the app bundle (no third-party font requests). If you contact the author via
-            GitHub, that is governed by GitHub&apos;s privacy policy, not this site.
-          </p>
+          <p>{t("privacyP2")}</p>
         </section>
 
         <section id="terms" className="max-w-3xl scroll-mt-20 space-y-2 leading-relaxed">
-          <h2 className="text-sm font-semibold text-heading">Terms</h2>
+          <h2 className="text-sm font-semibold text-heading">{t("termsTitle")}</h2>
           <p>
-            The site and model are provided <strong className="font-medium text-label">as is</strong>, without warranty.
-            Results are estimates for educational comparison only, not tax filings, mortgage approvals, or investment
-            advice. Tax and closing-cost rules in the model were last reviewed for{" "}
-            <strong className="font-medium text-label">{RULES_AS_OF}</strong>; provincial and federal programs change.
-            Confirm figures with a mortgage broker, accountant, or lawyer before making decisions.
+            <Trans
+              ns="legal"
+              i18nKey="termsP1"
+              values={{ rulesDate: RULES_AS_OF }}
+              components={{ strong: <strong className="font-medium text-label" /> }}
+            />
           </p>
-          <p>
-            To the fullest extent permitted by law, the authors are not liable for any loss arising from use of this
-            tool. The open-source software is licensed under MIT (see repository).
-          </p>
+          <p>{t("termsP2")}</p>
         </section>
 
         <p className="text-[11px] text-caption">
-          Tax &amp; closing-cost model last reviewed: {RULES_AS_OF}. Calculator cookie:{" "}
-          <code className="rounded bg-slate-100 px-1 dark:bg-slate-800">rvb_inputs</code>, 365 days, SameSite=Lax.
+          <Trans
+            ns="legal"
+            i18nKey="footerMeta"
+            values={{ rulesDate: RULES_AS_OF }}
+            components={{ code: <code className={codeClass} /> }}
+          />
         </p>
       </div>
     </footer>

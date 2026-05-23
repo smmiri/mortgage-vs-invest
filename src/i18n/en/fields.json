@@ -1,0 +1,70 @@
+{
+  "propertyPrice": {
+    "label": "Property price",
+    "help": "Listed or expected purchase price."
+  },
+  "downPayment": {
+    "label": "Down payment",
+    "help": "Percent of the property price you pay in cash at closing. The remainder is financed. Canadian minimum: 5% on the first $500k, 10% on $500k–$1.5M, 20% above $1.5M. Drag the slider or type a precise percentage."
+  },
+  "otherClosingCosts": {
+    "label": "Legal / title / inspection",
+    "help": "Non-tax closing costs: lawyer ($1.5–2.5k), title insurance ($300–500), home inspection or appraisal ($500–1k). Land transfer tax and GST/HST are auto-computed below."
+  },
+  "closingCostsManual": {
+    "label": "Closing costs (manual override)",
+    "help": "Used when the closing-costs mode is set to Manual. Replaces the province-aware breakdown with a single lump-sum number."
+  },
+  "amortization": {
+    "label": "Amortization",
+    "help": "Canadian insured mortgages (down < 20%) are usually 25 years. 30-year amortization is available for many first-time buyers and new builds; CMHC adds a 0.20% surcharge on the insurance premium when amortization exceeds 25 years."
+  },
+  "mortgageRate": {
+    "label": "Mortgage rate",
+    "help": "Nominal annual rate. Canadian mortgages compound semi-annually, so the effective monthly rate is (1 + r/2)^(1/6) − 1, slightly less than r/12."
+  },
+  "fixedExpenses": {
+    "label": "Monthly ownership costs",
+    "help": "Property tax, insurance, condo / strata fees, and maintenance. Anything you only pay as an owner."
+  },
+  "expenseInflation": {
+    "label": "Expense inflation",
+    "help": "Annual growth in ownership costs. Property tax and condo fees usually track inflation or rise faster."
+  },
+  "propertyGrowth": {
+    "label": "Property appreciation",
+    "help": "Annual change in market value. Long-run Canadian real-house-price growth has been near inflation; in some metros it has been higher."
+  },
+  "initialRent": {
+    "label": "Monthly rent",
+    "help": "Rent for an equivalent property today."
+  },
+  "rentIncrease": {
+    "label": "Annual rent increase",
+    "help": "Compounded yearly. Provincial guidelines (e.g. Ontario, BC) usually cap this between 2% and 4%."
+  },
+  "marketReturn": {
+    "label": "Market return",
+    "help": "Expected long-run nominal return on the renter's portfolio. A globally-diversified equity portfolio has historically returned 6–9% nominal."
+  },
+  "years": {
+    "label": "Time horizon",
+    "help": "Length of the comparison. Longer horizons usually favour the path with the higher compound growth rate."
+  },
+  "saleCostPct": {
+    "label": "Sale cost",
+    "help": "Realtor commission, legal fees, and discharge cost as a percentage of sale price. In Canada this is typically 4–6%."
+  },
+  "marginalTaxRate": {
+    "label": "Marginal tax rate",
+    "help": "Combined federal + provincial rate applied to taxable capital gains at exit. Used for both the home sale (if not fully exempt) and the renter's taxable portfolio gain."
+  },
+  "capitalGainsInclusionRate": {
+    "label": "Capital gains inclusion",
+    "help": "Share of the capital gain included in income (50% for individuals under current rules). Tax = taxable gain × inclusion rate × marginal rate."
+  },
+  "yearsAsPrincipalResidence": {
+    "label": "Years as principal residence",
+    "help": "Only used when PRE is Partial. Fraction of the gain exempt ≈ this ÷ years owned. Simplified; does not include CRA's +1 year rule."
+  }
+}

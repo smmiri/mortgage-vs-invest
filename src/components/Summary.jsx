@@ -1,81 +1,87 @@
-import { formatCompactCurrency, formatCurrency, formatPercent, formatSignedCurrency } from "../lib/format.js";
+import { useTranslation } from "react-i18next";
+import { useFormat } from "../hooks/useFormat.js";
 import StatCard from "./StatCard.jsx";
 
 export default function Summary({ results }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { cmhcPremium, cmhcRateApplied, monthlyPayment, initialTopUp, cashAtClose, final, inputs, exitTaxes } =
     results;
   const horizon = inputs.years;
   const useExitTax = inputs.modelExitTaxes !== false;
   const delta = useExitTax ? final.deltaAfterTax : final.delta;
   const preTaxDelta = final.delta;
-  const outcomeLabel = delta === 0 ? "Paths even" : delta > 0 ? "Buy path ahead" : "Rent path ahead";
+  const outcomeLabel =
+    delta === 0
+      ? t("summary.outcomeEven")
+      : delta > 0
+        ? t("summary.outcomeBuy")
+        : t("summary.outcomeRent");
   const breakevenText =
     final.breakeven == null
-      ? `No crossover within ${horizon} years`
-      : `Lines cross at year ${final.breakeven}`;
+      ? t("summary.noCrossover", { years: horizon })
+      : t("summary.crossoverAt", { year: final.breakeven });
 
   const taxSublabel = useExitTax
-    ? `${outcomeLabel} · Pre-tax ${formatSignedCurrency(preTaxDelta)} · Home ${formatCurrency(exitTaxes.buyTax)} · Portfolio ${formatCurrency(exitTaxes.rentTax)}`
+    ? `${outcomeLabel} · ${t("summary.preTax", { delta: fmt.formatSignedCurrency(preTaxDelta) })} · ${t("summary.homeTax", { tax: fmt.formatCurrency(exitTaxes.buyTax) })} · ${t("summary.portfolioTax", { tax: fmt.formatCurrency(exitTaxes.rentTax) })}`
     : `${outcomeLabel} · ${breakevenText}`;
 
   return (
     <section aria-label="Headline results" className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       <StatCard
         tone={delta >= 0 ? "positive" : "negative"}
-        label={useExitTax ? `After-tax delta (year ${horizon})` : `Delta at year ${horizon}`}
-        value={formatSignedCurrency(delta)}
+        label={useExitTax ? t("summary.afterTaxDelta", { year: horizon }) : t("summary.delta", { year: horizon })}
+        value={fmt.formatSignedCurrency(delta)}
         sublabel={useExitTax ? taxSublabel : `${outcomeLabel} · ${breakevenText}`}
-        help={
-          useExitTax
-            ? "Buyer after-tax wealth minus renter after-tax wealth at the horizon. Matches the chart. Portfolio tax accrues annually; home sale tax at exit when selling (PRE by default)."
-            : "Buyer net wealth minus renter net wealth at the end of the time horizon. Positive means the buy path has higher net wealth (not a recommendation)."
-        }
+        help={useExitTax ? t("summary.afterTaxHelp") : t("summary.deltaHelp")}
       />
       <StatCard
         tone="primary"
-        label="Cash at closing"
-        value={formatCurrency(cashAtClose)}
-        sublabel={`Down payment + ${formatCurrency(results.closingCosts)} closing costs`}
-        help="Total cash the buyer hands over at closing: down payment plus the province-aware closing-cost breakdown (LTT, GST/HST net of rebates, PST on CMHC, legal/title/inspection). The renter is assumed to invest the same total amount in the market portfolio at year 0."
+        label={t("summary.cashAtClose")}
+        value={fmt.formatCurrency(cashAtClose)}
+        sublabel={t("summary.cashSublabel", { closing: fmt.formatCurrency(results.closingCosts) })}
+        help={t("summary.cashHelp")}
       />
       <StatCard
         tone="primary"
-        label="Monthly P&I"
-        value={formatCurrency(monthlyPayment)}
-        sublabel="Mortgage payment (principal + interest)"
-        help="Computed with Canadian semi-annual compounding: effective monthly rate = (1 + r/2)^(1/6) − 1."
+        label={t("summary.monthlyPI")}
+        value={fmt.formatCurrency(monthlyPayment)}
+        sublabel={t("summary.monthlyPISub")}
+        help={t("summary.monthlyPIHelp")}
       />
       <StatCard
         tone="primary"
-        label="Initial monthly top-up"
-        value={formatSignedCurrency(initialTopUp)}
-        sublabel={initialTopUp >= 0 ? "Owning costs more than renting" : "Renting costs more than owning"}
-        help="The renter's monthly investment comes from this gap. We assume both paths spend max(owning_cost, rent) on housing each month; the cheaper side invests the difference at the market return. Floored at zero, never negative."
+        label={t("summary.topUp")}
+        value={fmt.formatSignedCurrency(initialTopUp)}
+        sublabel={initialTopUp >= 0 ? t("hints.owningMore") : t("hints.rentingMore")}
+        help={t("summary.topUpHelp")}
       />
       <StatCard
         tone={cmhcRateApplied > 0 ? "primary" : "neutral"}
-        label="CMHC insurance"
-        value={cmhcRateApplied > 0 ? formatCurrency(cmhcPremium) : "Not required"}
+        label={t("summary.cmhc")}
+        value={cmhcRateApplied > 0 ? fmt.formatCurrency(cmhcPremium) : t("summary.cmhcNotRequired")}
         sublabel={
           cmhcRateApplied > 0
-            ? `${formatPercent(cmhcRateApplied, 2)} of financed amount · rolled into principal`
-            : "≥ 20% down, no default insurance"
+            ? t("summary.cmhcSubRate", { rate: fmt.formatPercent(cmhcRateApplied, 2) })
+            : t("summary.cmhcNotRequired")
         }
-        help="Mandatory CMHC (or equivalent) default insurance when down payment is below 20%. The premium is added to the mortgage balance, not paid as cash at closing (PST on the premium may appear in closing costs in ON/QC/SK/MB)."
+        help={t("summary.cmhcHelp")}
       />
     </section>
   );
 }
 
 export function PathTotals({ results }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   const { final, inputs } = results;
   const horizon = inputs.years;
   return (
     <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 text-xs text-muted">
-      <Totals label="Total rent paid" value={formatCompactCurrency(final.totalRentPaid)} sub={`over ${horizon} yrs`} />
-      <Totals label="Total ownership cost" value={formatCompactCurrency(final.totalOwningCost)} sub={`over ${horizon} yrs`} />
-      <Totals label="Interest paid" value={formatCompactCurrency(final.totalInterestPaid)} sub="on the mortgage" />
-      <Totals label="Principal paid down" value={formatCompactCurrency(final.totalPrincipalPaid)} sub="reduces balance" />
+      <Totals label={t("pathTotals.rentPaid")} value={fmt.formatCompactCurrency(final.totalRentPaid)} sub={t("pathTotals.overYears", { years: horizon })} />
+      <Totals label={t("pathTotals.owningCost")} value={fmt.formatCompactCurrency(final.totalOwningCost)} sub={t("pathTotals.overYears", { years: horizon })} />
+      <Totals label={t("pathTotals.interest")} value={fmt.formatCompactCurrency(final.totalInterestPaid)} sub={t("pathTotals.onMortgage")} />
+      <Totals label={t("pathTotals.principal")} value={fmt.formatCompactCurrency(final.totalPrincipalPaid)} sub={t("pathTotals.reducesBalance")} />
     </section>
   );
 }
@@ -84,7 +90,7 @@ function Totals({ label, value, sub }) {
   return (
     <div className="rounded-lg border border-default bg-surface-card px-3 py-2">
       <div className="text-[11px] font-semibold uppercase tracking-wide text-caption">{label}</div>
-      <div className="mt-0.5 text-sm font-semibold tabular-nums text-label">{value}</div>
+      <div className="mt-0.5 text-sm font-semibold tabular-nums text-heading numeric-ltr">{value}</div>
       <div className="text-[11px] text-caption">{sub}</div>
     </div>
   );

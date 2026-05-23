@@ -114,6 +114,7 @@ export function monthlyToEffectiveAnnual(monthlyRate) {
 //   This represents the "I keep the property" scenario where wealth is paper
 //   equity.
 import { computeClosingCosts } from "./closing-costs.js";
+import { WARNING_CODES } from "./warning-codes.js";
 import {
   annualCapitalGainsTaxRate,
   computeExitTaxes,
@@ -179,9 +180,9 @@ export function simulate(inputs) {
           total: Math.max(0, closingCostsManual || 0),
           breakdown: [
             {
-              label: "Closing costs (manual)",
+              labelKey: "manualLabel",
               amount: Math.max(0, closingCostsManual || 0),
-              sublabel: "User-provided lump sum",
+              sublabelKey: "manualSub",
             },
           ],
         }
@@ -441,7 +442,7 @@ function collectWarnings(inputs, rate, baseMortgage, years, amortization) {
   const warnings = [];
   const { propertyPrice, downPayment } = inputs;
   if (propertyPrice <= 0) {
-    warnings.push({ level: "error", text: "Property price must be greater than zero." });
+    warnings.push({ level: "error", code: WARNING_CODES.PROPERTY_PRICE_ZERO });
     return warnings;
   }
   const dpPct = downPayment / propertyPrice;
@@ -449,39 +450,37 @@ function collectWarnings(inputs, rate, baseMortgage, years, amortization) {
   if (downPayment < minDp - 1) {
     warnings.push({
       level: "warn",
-      text: `Down payment below Canadian minimum (${formatPercent(minDp / propertyPrice)} ≈ $${minDp.toLocaleString()}). CMHC will not insure this loan as-is.`,
+      code: WARNING_CODES.DOWN_PAYMENT_BELOW_MIN,
+      params: { minPct: minDp / propertyPrice, minDp },
     });
   }
   if (propertyPrice > 1_500_000 && dpPct < 0.2) {
     warnings.push({
       level: "warn",
-      text: "Properties above $1.5M are not insurable. CMHC premium is zero; lender will require ≥ 20% down.",
+      code: WARNING_CODES.PROPERTY_NOT_INSURABLE,
     });
   }
   if (amortization > 25 && rate > 0) {
     warnings.push({
       level: "info",
-      text: "Amortization > 25y on an insured mortgage adds a 0.20% CMHC surcharge.",
+      code: WARNING_CODES.AMORTIZATION_CMHC_SURCHARGE,
     });
   }
   if (downPayment >= propertyPrice) {
-    warnings.push({ level: "info", text: "Cash purchase: no mortgage required." });
+    warnings.push({ level: "info", code: WARNING_CODES.CASH_PURCHASE });
   }
   if (baseMortgage > 0 && (inputs.mortgageRate || 0) <= 0) {
     warnings.push({
       level: "info",
-      text: "Mortgage rate is 0%; payment is principal / amortization months.",
+      code: WARNING_CODES.ZERO_MORTGAGE_RATE,
     });
   }
   if (years > amortization && baseMortgage > 0) {
     warnings.push({
       level: "info",
-      text: `Time horizon (${years}y) exceeds amortization (${amortization}y). After the mortgage is paid off, owning cost drops to property expenses only (no P&I).`,
+      code: WARNING_CODES.HORIZON_EXCEEDS_AMORTIZATION,
+      params: { years, amort: amortization },
     });
   }
   return warnings;
-}
-
-function formatPercent(value) {
-  return `${(value * 100).toFixed(1)}%`;
 }

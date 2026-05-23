@@ -1,0 +1,9 @@
+{
+  "propertyPriceZero": "Property price must be greater than zero.",
+  "downPaymentBelowMin": "Down payment below Canadian minimum ({{minPct}} ≈ {{minDp}}). CMHC will not insure this loan as-is.",
+  "propertyNotInsurable": "Properties above $1.5M are not insurable. CMHC premium is zero; lender will require ≥ 20% down.",
+  "amortizationCmhcSurcharge": "Amortization > 25y on an insured mortgage adds a 0.20% CMHC surcharge.",
+  "cashPurchase": "Cash purchase: no mortgage required.",
+  "zeroMortgageRate": "Mortgage rate is 0%; payment is principal / amortization months.",
+  "horizonExceedsAmortization": "Time horizon ({{years}}y) exceeds amortization ({{amort}}y). After the mortgage is paid off, owning cost drops to property expenses only (no P&I)."
+}

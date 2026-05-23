@@ -31,7 +31,7 @@ test("BC PTT: FTB on $800k resale — full exemption (≤ $835k)", () => {
     firstTimeBuyer: true,
   });
   assert.equal(r.total, 0);
-  assert.ok(r.lines.some((l) => l.includes("FTB")));
+  assert.ok(r.lineKeys.includes("bcFtbFull"));
 });
 
 test("BC PTT: FTB on $847,500 — partial exemption (halfway through phase-out)", () => {
@@ -65,7 +65,7 @@ test("BC PTT: Newly Built Home Exemption — full at $1.0M", () => {
     newConstruction: true,
   });
   assert.equal(r.total, 0);
-  assert.ok(r.lines.some((l) => l.includes("Newly Built")));
+  assert.ok(r.lineKeys.includes("bcNewlyBuilt"));
 });
 
 test("ON LTT: $1.05M — closed-form check", () => {

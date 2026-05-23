@@ -1,0 +1,43 @@
+{
+  "lines": {
+    "bcFtbFull": "معافیت خریدار اول BC (کامل)",
+    "bcFtbPartial": "معافیت خریدار اول BC (تدریجی)",
+    "bcNewlyBuilt": "معافیت خانه نوساز BC",
+    "onFtbRefund": "بازپرداخت خریدار اول ON (تا ۴٬۰۰۰ دلار)",
+    "qcMontreal": "مالیات خوش‌آمدگویی مونترال",
+    "qcProvincial": "مالیات خوش‌آمدگویی استانی کبک",
+    "peiFtb": "معافیت خریدار اول PEI",
+    "torontoFtb": "بازپرداخت MLTT تورنتو (تا ۴٬۴۷۵ دلار)",
+    "torontoMltt": "مالیات انتقال شهرداری تورنتو",
+    "gstFtb2025": "بازپرداخت GST فدرال ۲۰۲۵ خریدار اول",
+    "gstStandard": "بازپرداخت GST مسکن جدید (CRA RC4028)",
+    "provincialNewHousing": "بازپرداخت مسکن جدید {{province}} (بخش استانی)",
+    "qcQstRebate": "بازپرداخت QST مسکن جدید کبک"
+  },
+  "lttLabel": {
+    "BC": "مالیات انتقال ملک BC",
+    "ON": "مالیات انتقال زمین انتاریو",
+    "QC": "مالیات خوش‌آمدگویی کبک",
+    "default": "مالیات انتقال {{province}}"
+  },
+  "gstHst": "GST / HST روی ساخت‌و‌ساز جدید",
+  "netOfRebates": "پس از بازپرداخت‌ها",
+  "pstCmhc": "PST روی حق بیمه CMHC",
+  "pstCmhcSub": "{{province}} PST روی حق بیمه CMHC می‌گیرد",
+  "legalTitle": "حقوقی، سند، بازرسی",
+  "legalSub": "وکیل + بیمه سند + بازرسی",
+  "lttSchedule": "جدول {{province}} اعمال شد",
+  "noProvincialLtt": "{{province}} مالیات انتقال استانی ندارد",
+  "manualLabel": "هزینه‌های بسته شدن (دستی)",
+  "manualSub": "مبلغ واحد کاربر",
+  "detail": {
+    "federalGst": "GST فدرال (۵٪)",
+    "federalRebate": "  − بازپرداخت فدرال",
+    "provincialHst": "HST استانی",
+    "provincialRebate": "  − بازپرداخت استانی",
+    "qcQst": "QST کبک (۹٫۹۷۵٪)",
+    "qstRebate": "  − بازپرداخت QST",
+    "municipalLtt": "LTT شهرداری",
+    "municipalFtb": "  − بازپرداخت خریدار اول (شهرداری)"
+  }
+}

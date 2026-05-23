@@ -1,36 +1,35 @@
-import { THEME_OPTIONS } from "../lib/theme.js";
+import { useTranslation } from "react-i18next";
 import { useTheme } from "./ThemeProvider.jsx";
 
-const LABELS = {
-  light: "Light",
-  dark: "Dark",
-  system: "System",
-};
+const OPTIONS = [
+  { value: "light", key: "light" },
+  { value: "dark", key: "dark" },
+  { value: "system", key: "system" },
+];
 
 export default function ThemeToggle() {
   const { preference, setPreference } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div
       role="group"
-      aria-label="Color theme"
-      className="inline-flex shrink-0 rounded-full border border-default bg-surface-card p-0.5 text-xs"
+      aria-label={t("theme.label")}
+      className="inline-flex rounded-full border border-default bg-surface-card p-0.5 text-xs"
     >
-      {THEME_OPTIONS.map((mode) => {
-        const active = preference === mode;
+      {OPTIONS.map(({ value, key }) => {
+        const active = preference === value;
         return (
           <button
-            key={mode}
+            key={value}
             type="button"
+            onClick={() => setPreference(value)}
             aria-pressed={active}
-            onClick={() => setPreference(mode)}
-            className={`rounded-full px-2.5 py-1 font-medium transition-colors ${
-              active
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-muted hover:bg-surface-inset hover:text-heading"
+            className={`rounded-full px-2 py-1 font-medium transition-colors ${
+              active ? "bg-indigo-600 text-white" : "text-muted hover:text-heading"
             }`}
           >
-            {LABELS[mode]}
+            {t(`theme.${key}`)}
           </button>
         );
       })}
