@@ -25,6 +25,9 @@ export default function Footer({ repoUrl }) {
               GitHub
             </a>
           ) : null}
+          <a href="https://smmiri.com" className="hover:text-heading" target="_blank" rel="noreferrer noopener">
+            Mohammad Miri
+          </a>
           <span aria-hidden>·</span>
           <span>MIT licensed</span>
         </nav>
