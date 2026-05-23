@@ -3,6 +3,8 @@ import { RULES_AS_OF } from "../lib/site-meta.js";
 
 const codeClass = "rounded bg-slate-100 px-1 dark:bg-slate-800";
 
+const CV_SITE_URL = "https://smmiri.com";
+
 export default function Footer({ repoUrl }) {
   const { t } = useTranslation("legal");
 
@@ -29,6 +31,9 @@ export default function Footer({ repoUrl }) {
               {t("github")}
             </a>
           ) : null}
+          <a href={CV_SITE_URL} className="hover:text-heading" target="_blank" rel="noreferrer noopener">
+            {t("author")}
+          </a>
           <span aria-hidden>·</span>
           <span>{t("mit")}</span>
         </nav>

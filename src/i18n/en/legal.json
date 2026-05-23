@@ -4,6 +4,7 @@
   "privacy": "Privacy",
   "terms": "Terms",
   "github": "GitHub",
+  "author": "Mohammad Miri",
   "mit": "MIT licensed",
   "privacyTitle": "Privacy",
   "privacyP1": "This calculator runs entirely in your browser. Your inputs are not sent to a server. The only data stored locally is a first-party cookie named <code>rvb_inputs</code> (calculator assumptions, up to one year) so settings persist when you return. Use <strong>Reset to defaults</strong> in the calculator to clear it. No analytics or advertising trackers are used.",
