@@ -104,7 +104,18 @@
     "today": "امروز",
     "year": "سال {{year}}",
     "difference": "اختلاف",
-    "preTaxExit": "پیش از مالیات در پایان: خرید {{buy}}، اجاره {{rent}}"
+    "preTaxExit": "پیش از مالیات در پایان: خرید {{buy}}، اجاره {{rent}}",
+    "cashflowCaption": "میله‌های انباشته (محور راست): خروج نقد سالانه مسکن — خرید: اصل، بهره، هزینه ثابت؛ اجاره: اجاره پرداختی و مازاد سرمایه‌گذاری.",
+    "cashflowLegendBuy": "خرید",
+    "cashflowLegendRent": "اجاره",
+    "annualCashflow": "خروج نقد سالانه",
+    "buyPrincipal": "اصل",
+    "buyInterest": "بهره",
+    "buyFixed": "هزینه ثابت",
+    "rentPaid": "اجاره",
+    "rentTopUp": "سرمایه‌گذاری مازاد",
+    "buyCashflowTotal": "جمع خرید",
+    "rentCashflowTotal": "جمع اجاره"
   },
   "yearTable": {
     "title": "جزئیات سال‌به‌سال",

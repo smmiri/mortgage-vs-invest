@@ -104,7 +104,18 @@
     "today": "Today",
     "year": "Year {{year}}",
     "difference": "Difference",
-    "preTaxExit": "Pre-tax at exit: buy {{buy}}, rent {{rent}}"
+    "preTaxExit": "Pre-tax at exit: buy {{buy}}, rent {{rent}}",
+    "cashflowCaption": "Stacked bars (right axis): annual housing cash out — buy split into principal, interest, and fixed charges; rent split into rent paid and surplus invested.",
+    "cashflowLegendBuy": "Buy",
+    "cashflowLegendRent": "Rent",
+    "annualCashflow": "Annual cash out",
+    "buyPrincipal": "Principal",
+    "buyInterest": "Interest",
+    "buyFixed": "Fixed charges",
+    "rentPaid": "Rent",
+    "rentTopUp": "Invest top-up",
+    "buyCashflowTotal": "Buy total",
+    "rentCashflowTotal": "Rent total"
   },
   "yearTable": {
     "title": "Year-by-year detail",

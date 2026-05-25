@@ -241,6 +241,7 @@ export function simulate(inputs) {
       monthlyRent: Math.round(initialRent),
       monthlyOwningCost: Math.round(monthlyPayment + (fixedExpenses || 0)),
       monthlyDifference: Math.round(initialTopUp),
+      annualCashflow: null,
     },
   ];
 
@@ -255,6 +256,9 @@ export function simulate(inputs) {
     const buyerPfStartOfYear = buyerPortfolio;
     let renterYearContrib = 0;
     let buyerYearContrib = 0;
+    let yearInterest = 0;
+    let yearPrincipal = 0;
+    let yearFixed = 0;
 
     let monthOwningCost = 0;
     for (let m = 0; m < 12; m++) {
@@ -265,6 +269,9 @@ export function simulate(inputs) {
       const interestThisMonth = Math.min(interest, mortgageDue);
       totalInterestPaid += interestThisMonth;
       totalPrincipalPaid += principalPayment;
+      yearInterest += interestThisMonth;
+      yearPrincipal += principalPayment;
+      yearFixed += expense;
 
       const owningCost = mortgageDue + expense;
       monthOwningCost += owningCost;
@@ -354,6 +361,13 @@ export function simulate(inputs) {
       monthlyRent: Math.round(currentMonthlyRent),
       monthlyOwningCost: Math.round(monthOwningCost / 12),
       monthlyDifference: Math.round(monthOwningCost / 12 - currentMonthlyRent),
+      annualCashflow: {
+        buyPrincipal: Math.round(yearPrincipal),
+        buyInterest: Math.round(yearInterest),
+        buyFixed: Math.round(yearFixed),
+        rentPaid: Math.round(currentMonthlyRent * 12),
+        rentTopUp: Math.round(renterYearContrib),
+      },
     });
   }
 

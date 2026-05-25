@@ -208,3 +208,35 @@ test("warnings when horizon exceeds amortization", () => {
   const r = simulate({ ...DEFAULT_INPUTS, years: 30, amortization: 25 });
   assert.ok(r.warnings.some((w) => w.code === WARNING_CODES.HORIZON_EXCEEDS_AMORTIZATION));
 });
+
+test("annual cashflow on trajectory sums to path totals", () => {
+  const r = simulate(DEFAULT_INPUTS);
+  assert.equal(r.trajectory[0].annualCashflow, null);
+
+  let interest = 0;
+  let principal = 0;
+  let fixed = 0;
+  let rent = 0;
+  let topUp = 0;
+  for (const p of r.trajectory) {
+    if (!p.annualCashflow) continue;
+    const c = p.annualCashflow;
+    interest += c.buyInterest;
+    principal += c.buyPrincipal;
+    fixed += c.buyFixed;
+    rent += c.rentPaid;
+    topUp += c.rentTopUp;
+    const buyTotal = c.buyPrincipal + c.buyInterest + c.buyFixed;
+    assert.ok(
+      Math.abs(buyTotal - p.monthlyOwningCost * 12) <= 6,
+      `year ${p.year}: buy cashflow ${buyTotal} vs 12× avg monthly own ${p.monthlyOwningCost * 12}`,
+    );
+  }
+
+  const tol = r.inputs.years;
+  assert.ok(Math.abs(interest - r.final.totalInterestPaid) <= tol);
+  assert.ok(Math.abs(principal - r.final.totalPrincipalPaid) <= tol);
+  assert.ok(Math.abs(rent - r.final.totalRentPaid) <= tol);
+  assert.ok(topUp >= 0);
+  assert.ok(fixed > 0);
+});
