@@ -81,6 +81,13 @@ function niceAxisMax(value, pad = 0.08) {
   return step * magnitude;
 }
 
+/** Min plot width so bars and labels stay readable; enables horizontal scroll on narrow viewports. */
+function chartScrollMinWidth(pointCount) {
+  const perPoint = 52;
+  const axisGutter = 148;
+  return Math.max(360, pointCount * perPoint + axisGutter);
+}
+
 export default function WealthChart({ results }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -108,6 +115,7 @@ export default function WealthChart({ results }) {
   const breakeven = final.breakeven;
   const wealthMax = niceAxisMax(maxWealthValue(data));
   const cashflowMax = niceAxisMax(maxCashflowStack(data));
+  const scrollMinWidth = useMemo(() => chartScrollMinWidth(data.length), [data.length]);
 
   return (
     <figure
@@ -162,8 +170,13 @@ export default function WealthChart({ results }) {
         </div>
       </figcaption>
 
-      <div className="chart-ltr h-80 w-full overflow-visible sm:h-[28rem]">
-        <ResponsiveContainer width="100%" height="100%">
+      <p className="mb-2 text-[10px] text-muted sm:hidden">{t("chart.scrollHint")}</p>
+      <div className="-mx-1 overflow-x-auto overscroll-x-contain sm:mx-0">
+        <div
+          className="chart-ltr h-80 w-full sm:h-[28rem]"
+          style={{ minWidth: `max(100%, ${scrollMinWidth}px)` }}
+        >
+          <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
             data={data}
             barCategoryGap="18%"
@@ -296,7 +309,8 @@ export default function WealthChart({ results }) {
               isAnimationActive={false}
             />
           </ComposedChart>
-        </ResponsiveContainer>
+          </ResponsiveContainer>
+        </div>
       </div>
     </figure>
   );

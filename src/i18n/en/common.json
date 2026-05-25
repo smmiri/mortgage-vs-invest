@@ -106,6 +106,7 @@
     "difference": "Difference",
     "preTaxExit": "Pre-tax at exit: buy {{buy}}, rent {{rent}}",
     "cashflowCaption": "Stacked bars (right axis): annual housing cash out — buy split into principal, interest, and fixed charges; rent split into rent paid and surplus invested.",
+    "scrollHint": "Swipe sideways to view the full chart.",
     "cashflowLegendBuy": "Buy",
     "cashflowLegendRent": "Rent",
     "annualCashflow": "Annual cash out",
